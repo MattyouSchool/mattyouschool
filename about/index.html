@@ -2,34 +2,60 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>Dyloki | Over Ons</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DYLOKI | About The Project</title>
     <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Poppins:wght@300;600;900&display=swap" rel="stylesheet">
 </head>
 <body>
+
     <nav class="navbar">
-        <div class="logo">DYLOKI<span>.</span></div>
+        <div class="logo">DY<span>LOKI</span></div>
         <ul class="nav-links">
-            <li><a href="../">Home</a></li>
-            <li><a href="../games/">Games</a></li>
-            <li><a href="../shop/">Shop</a></li>
-            <li><a href="../about/">About</a></li>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../games/index.html">Games</a></li>
+            <li><a href="../shop/index.html">Shop</a></li>
+            <li><a href="../about/index.html" style="color: #00f2fe; opacity: 1;">About</a></li>
         </ul>
+        <div class="user-stats-nav">
+            <span id="nav-xp">XP: 0</span> | <span id="nav-coins">🪙 0</span>
+        </div>
     </nav>
 
+    <header class="hero-premium">
+        <div class="hero-content">
+            <h1 class="main-title">ABOUT US</h1>
+            <p class="subtitle">THE VISION BEHIND DYLOKI</p>
+        </div>
+    </header>
+
     <main class="container">
-        <section class="status-card">
-            <h1>Over <span class="highlight">Dyloki</span></h1>
-            <p>Dyloki is niet zomaar een website. Het is een innovatief gaming platform ontstaan uit een krachtige samenwerking:</p>
-            <h2 style="margin-top:20px;">mattyou studios™ x Dylano</h2>
-            <p style="margin-top:10px; line-height:1.8;">
-                Mattyou Studios™ staat bekend om hoogwaardige content en technische innovatie. Samen met Dylano, die de drijvende kracht is achter de interface en community-ervaring, is Dyloki gebouwd om gamers te belonen voor hun tijd. 
-                <br><br>
-                Onze missie is om een plek te creëren waar je niet alleen games speelt, maar ook een status opbouwt binnen een groeiend ecosysteem. Alles wat je hier ziet is met passie geprogrammeerd voor de ultieme gebruikerservaring.
-            </p>
+        <section class="glass-card">
+            <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <h2 style="font-family: 'Syncopate'; color: #00f2fe; margin-bottom: 20px;">MATTYOU STUDIOS™ X DYLANO</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 30px; opacity: 0.8;">
+                    Dyloki is niet zomaar een website. Het is een hyper-modern gaming platform ontwikkeld door Mattyou Studios™ in samenwerking met Dylano. 
+                    Onze focus ligt op snelheid, cloud-integratie en een premium gebruikerservaring.
+                </p>
+                
+                <div class="grid" style="margin-top: 50px;">
+                    <div class="stat-box">
+                        <h3 style="color: #00f2fe;">V4.0</h3>
+                        <p style="font-size: 1rem;">Laatste stabiele cloud build.</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3 style="color: #00f2fe;">FIREBASE</h3>
+                        <p style="font-size: 1rem;">Real-time data opslag.</p>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
 
-    <footer><p>Dyloki is made by <strong>mattyou studios™ x Dylano</strong></p></footer>
-    <script src="../script.js"></script>
+    <footer class="footer-premium">
+        <p>Made by <strong>mattyou studios™ x Dylano</strong></p>
+    </footer>
+
+    <script type="module" src="../script.js"></script>
 </body>
 </html>
