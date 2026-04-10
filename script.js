@@ -1,18 +1,19 @@
-// --- DYLOKI CLOUD ENGINE v3.1 ---
+// --- DYLOKI CLOUD ENGINE v4.0 ---
 // Made by mattyou studios™ x Dylano
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// FIREBASE CONFIG (Zelf invullen vanuit Firebase Console)
+// Jouw Firebase Config uit de afbeelding
 const firebaseConfig = {
-    apiKey: "JOUW_API_KEY",
-    authDomain: "JOUW_PROJECT.firebaseapp.com",
-    databaseURL: "https://JOUW_PROJECT-default-rtdb.firebaseio.com",
-    projectId: "JOUW_PROJECT",
-    storageBucket: "JOUW_PROJECT.appspot.com",
-    messagingSenderId: "ID",
-    appId: "APP_ID"
+    apiKey: "AIzaSyCi5LxXD-FGvdmLZGXPENYBWraWdDUNck0",
+    authDomain: "dyloki-cloud.firebaseapp.com",
+    databaseURL: "https://dyloki-cloud-default-rtdb.firebaseio.com",
+    projectId: "dyloki-cloud",
+    storageBucket: "dyloki-cloud.firebasestorage.app",
+    messagingSenderId: "486650834826",
+    appId: "1:486650834826:web:d5efeb0af6cc574d0c2273",
+    measurementId: "G-40YRW3TTGR"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -28,10 +29,10 @@ window.register = async function() {
 
     const userRef = ref(db, 'users/' + user);
     const snapshot = await get(userRef);
-    if (snapshot.exists()) return alert("Naam is al bezet!");
+    if (snapshot.exists()) return alert("Deze naam is al bezet!");
 
     await set(userRef, { username: user, password: pass, xp: 0, coins: 0 });
-    alert("Account aangemaakt! Scroll naar 'Inloggen'.");
+    alert("Account succesvol aangemaakt! Je kunt nu inloggen.");
 };
 
 window.login = async function() {
@@ -46,7 +47,7 @@ window.login = async function() {
         localStorage.setItem('dyloki_session', JSON.stringify(currentUser));
         location.reload(); 
     } else {
-        alert("Foutieve gegevens!");
+        alert("Gebruikersnaam of wachtwoord is onjuist.");
     }
 };
 
@@ -55,7 +56,7 @@ window.logout = function() {
     location.reload();
 };
 
-// --- XP & UI ---
+// --- XP & COIN EARNING ---
 function startPassiveEarning() {
     if (!currentUser) return;
     setInterval(async () => {
@@ -87,13 +88,13 @@ function updateUI() {
         }
 
         let rank = "Novice";
-        if (currentUser.xp >= 5000) rank = "Dyloki Legend";
-        else if (currentUser.xp >= 1000) rank = "Elite Gamer";
-        else if (currentUser.xp >= 500) rank = "Pro Player";
+        if (currentUser.xp >= 5000) rank = "Dyloki Master";
+        else if (currentUser.xp >= 1000) rank = "Elite";
+        else if (currentUser.xp >= 500) rank = "Pro";
 
         if (document.getElementById('rank-display')) document.getElementById('rank-display').innerText = rank;
         if (document.getElementById('progress-bar')) {
-            document.getElementById('progress-bar').style.width = (currentUser.xp % 500) / 5 + "%";
+            document.getElementById('progress-bar').style.width = (currentUser.xp % 1000) / 10 + "%";
         }
     }
 }
