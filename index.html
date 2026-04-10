@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DYLOKI | Professional Gaming Hub</title>
+    <title>DYLOKI | Home</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Syncopate:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -14,18 +14,22 @@
             <li><a href="index.html" class="highlight-link">Home</a></li>
             <li><a href="games/index.html">Games</a></li>
             <li><a href="https://www.youtube.com/@matyou333" target="_blank">YouTube</a></li>
-            <li><a href="shop/index.html">Premium Shop</a></li>
+            <li><a href="shop/index.html">Shop</a></li>
         </ul>
+        <div class="header-stats hover-glow">
+            <span id="rank-tag" class="tag">RANK: ...</span>
+            <span id="xp-counter" style="margin-left: 15px; font-weight: 800; color: var(--cyan);">XP: 0</span>
+        </div>
     </nav>
 
     <header class="hero-premium">
         <div class="hero-content">
             <span class="eyebrow">MATTYOU STUDIOS™ PRESENTS</span>
             <h1 class="main-title">DY<span>LOKI</span></h1>
-            <p class="hero-description">De standaard in high-performance gaming interfaces en community gedreven content.</p>
+            <p class="hero-description">De standaard in high-performance gaming interfaces en community content.</p>
             <div class="cta-group">
                 <a href="games/index.html" class="btn-main">BEKIJK GAMES</a>
-                <a href="https://www.youtube.com/@matyou333" class="btn-sub" target="_blank">ONTDEK @MATTYOU</a>
+                <a href="https://www.youtube.com/@matyou333" class="btn-sub" target="_blank">@MATTYOU</a>
             </div>
         </div>
     </header>
@@ -34,38 +38,22 @@
         <section class="mission-grid">
             <div class="mission-card interactive-border">
                 <h3>STABILITEIT</h3>
-                <p>Gebouwd op een fundament van snelheid en betrouwbaarheid binnen het Mattyou ecosysteem.</p>
+                <p>Gebouwd op snelheid en betrouwbaarheid binnen het Mattyou ecosysteem.</p>
             </div>
             <div class="mission-card interactive-border">
-                <h3>INNOVATIE</h3>
-                <p>Continue updates aan de UI voor de meest vloeiende gebruikerservaring in 2026.</p>
-            </div>
-            <div class="mission-card interactive-border">
-                <h3>COMMUNITY</h3>
-                <p>Directe integratie met YouTube voor maximale betrokkenheid bij elke release.</p>
-            </div>
-        </section>
-
-        <section class="glass-panel interactive-border" style="text-align: center;">
-            <h2 style="font-family: 'Syncopate'; margin-bottom: 20px;">MATTYOU STUDIOS INFO</h2>
-            <p style="color: var(--text-muted); max-width: 700px; margin: 0 auto 30px;">
-                Dyloki is de centrale hub voor alle projecten van Mattyou Studios. Van browser-games zoals 2D Minecraft tot exclusieve community content.
-            </p>
-            <div class="status-row">
-                <span style="color: var(--cyan); font-weight: 800; letter-spacing: 2px;">● SYSTEM ONLINE</span>
+                <h3>XP SYSTEM</h3>
+                <p>Verdien elke minuut 10 XP door simpelweg op de site te blijven en stijg in Rank.</p>
             </div>
         </section>
     </main>
 
     <footer class="footer-main">
-        <div class="footer-top">
-            <div class="footer-brand hover-glow">DY<span>LOKI</span></div>
-            <p>De officiële hub voor @mattyou fans en gamers.</p>
-        </div>
         <div class="footer-bottom">
             <p>Made by <strong>Mattyou Studios™ x Dylano</strong></p>
             <p style="font-size: 0.65rem; margin-top: 10px; opacity: 0.5;">&copy; 2026 ALL RIGHTS RESERVED.</p>
         </div>
     </footer>
+
+    <script src="xp-system.js"></script>
 </body>
 </html>
