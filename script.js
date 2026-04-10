@@ -1,4 +1,3 @@
-// --- DYLOKI CLOUD CORE v4.1 ---
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
@@ -15,67 +14,46 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
 let currentUser = JSON.parse(localStorage.getItem('dyloki_session')) || null;
 
-// REGISTER FUNCTIE (Maakt het mapje 'accounts' aan bij de eerste user)
 window.register = async function() {
     const user = document.getElementById('reg-user').value.trim().toLowerCase();
     const pass = document.getElementById('reg-pass').value;
-    if (!user || !pass) return alert("FOUT: VUL ALLES IN");
+    if (!user || !pass) return alert("VUL ALLE VELDEN IN");
 
-    // We kijken nu in het mapje 'accounts'
     const userRef = ref(db, 'accounts/' + user);
-    const snapshot = await get(userRef);
-    
-    if (snapshot.exists()) {
-        return alert("FOUT: DEZE NAAM BESTAAT AL IN ACCOUNTS");
-    }
+    const snap = await get(userRef);
+    if (snap.exists()) return alert("NAAM AL BEZET");
 
-    await set(userRef, { 
-        username: user, 
-        password: pass, 
-        xp: 0, 
-        coins: 0,
-        rank: "Novice"
-    });
-    
-    alert("ACCOUNT AANGEMAAKT IN DATABASE!");
+    await set(userRef, { username: user, password: pass, xp: 0, coins: 0, rank: "Novice" });
+    alert("ACCOUNT AANGEMAAKT!");
 };
 
-// LOGIN FUNCTIE
 window.login = async function() {
     const user = document.getElementById('log-user').value.trim().toLowerCase();
     const pass = document.getElementById('log-pass').value;
-
     const userRef = ref(db, 'accounts/' + user);
-    const snapshot = await get(userRef);
+    const snap = await get(userRef);
 
-    if (snapshot.exists() && snapshot.val().password === pass) {
-        currentUser = snapshot.val();
+    if (snap.exists() && snap.val().password === pass) {
+        currentUser = snap.val();
         localStorage.setItem('dyloki_session', JSON.stringify(currentUser));
         location.reload(); 
-    } else {
-        alert("TOEGANG GEWEIGERD: GEGEVENS ONJUIST");
-    }
+    } else { alert("ONJUISTE GEGEVENS"); }
 };
 
-window.logout = function() {
-    localStorage.removeItem('dyloki_session');
-    location.reload();
-};
+window.logout = function() { localStorage.removeItem('dyloki_session'); location.reload(); };
 
 function startPassiveEarning() {
     if (!currentUser) return;
     setInterval(async () => {
-        currentUser.xp += 1;
-        currentUser.coins += 5;
-        // Update in het accounts mapje
+        currentUser.xp += 2; // Iets sneller XP
+        currentUser.coins += 10;
         const userRef = ref(db, 'accounts/' + currentUser.username);
         await update(userRef, { xp: currentUser.xp, coins: currentUser.coins });
         localStorage.setItem('dyloki_session', JSON.stringify(currentUser));
         updateUI();
-    }, 6000);
+    }, 5000);
 }
 
 function updateUI() {
@@ -83,20 +61,22 @@ function updateUI() {
         if(document.getElementById('auth-section')) document.getElementById('auth-section').style.display = 'none';
         if(document.getElementById('main-content')) document.getElementById('main-content').style.display = 'block';
         
-        const xpElements = [document.getElementById('nav-xp'), document.getElementById('xp-display')];
-        const coinElements = [document.getElementById('nav-coins'), document.getElementById('coin-display')];
-        
-        xpElements.forEach(el => { if(el) el.innerText = (el.id.includes('nav') ? "XP: " : "") + currentUser.xp; });
-        coinElements.forEach(el => { if(el) el.innerText = (el.id.includes('nav') ? "🪙 " : "") + currentUser.coins; });
-        
+        document.getElementById('nav-xp').innerText = "XP: " + currentUser.xp;
+        document.getElementById('nav-coins').innerText = "🪙 " + currentUser.coins;
+        if(document.getElementById('xp-display')) document.getElementById('xp-display').innerText = currentUser.xp;
+        if(document.getElementById('coin-display')) document.getElementById('coin-display').innerText = currentUser.coins;
         if(document.getElementById('user-welcome')) document.getElementById('user-welcome').innerText = currentUser.username.toUpperCase();
 
-        let rank = "Novice";
-        if (currentUser.xp >= 5000) rank = "CYBER LORD";
-        else if (currentUser.xp >= 1000) rank = "ELITE AGENT";
-        
+        let rank = "NOVICE";
+        if (currentUser.xp >= 10000) rank = "ELITE GHOST";
+        else if (currentUser.xp >= 5000) rank = "CYBER LORD";
+        else if (currentUser.xp >= 1000) rank = "STRIKER";
+
         if(document.getElementById('rank-display')) document.getElementById('rank-display').innerText = rank;
-        if(document.getElementById('progress-bar')) document.getElementById('progress-bar').style.width = (currentUser.xp % 1000) / 10 + "%";
+        if(document.getElementById('progress-bar')) {
+            let progress = (currentUser.xp % 1000) / 10;
+            document.getElementById('progress-bar').style.width = progress + "%";
+        }
     }
 }
 
