@@ -1,122 +1,102 @@
-// --- DYLOKI CORE ENGINE v2.0 ---
+// --- DYLOKI CLOUD ENGINE v3.1 ---
 // Made by mattyou studios™ x Dylano
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+// FIREBASE CONFIG (Zelf invullen vanuit Firebase Console)
+const firebaseConfig = {
+    apiKey: "JOUW_API_KEY",
+    authDomain: "JOUW_PROJECT.firebaseapp.com",
+    databaseURL: "https://JOUW_PROJECT-default-rtdb.firebaseio.com",
+    projectId: "JOUW_PROJECT",
+    storageBucket: "JOUW_PROJECT.appspot.com",
+    messagingSenderId: "ID",
+    appId: "APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
 let currentUser = JSON.parse(localStorage.getItem('dyloki_session')) || null;
 
-// Systeem om XP en Coins bij te werken
-function updateProgress() {
-    if (!currentUser) return;
-
-    currentUser.xp += 1; // 10 XP per minuut (bij interval van 6 sec)
-    currentUser.coins += 5; // 50 Coins per minuut
-    
-    saveUser();
-    updateUI();
-}
-
-function saveUser() {
-    if (!currentUser) return;
-    localStorage.setItem('dyloki_session', JSON.stringify(currentUser));
-    
-    // Update ook in de database van alle accounts
-    let accounts = JSON.parse(localStorage.getItem('dyloki_accounts')) || [];
-    let index = accounts.findIndex(a => a.username === currentUser.username);
-    if (index !== -1) {
-        accounts[index] = currentUser;
-        localStorage.setItem('dyloki_accounts', JSON.stringify(accounts));
-    }
-}
-
-function updateUI() {
-    if (!currentUser) {
-        if (document.getElementById('auth-section')) document.getElementById('auth-section').style.display = 'block';
-        if (document.getElementById('main-content')) document.getElementById('main-content').style.display = 'none';
-        return;
-    }
-
-    if (document.getElementById('auth-section')) document.getElementById('auth-section').style.display = 'none';
-    if (document.getElementById('main-content')) document.getElementById('main-content').style.display = 'block';
-
-    // UI Elementen vullen
-    const elements = {
-        'nav-xp': `XP: ${currentUser.xp}`,
-        'nav-coins': `🪙 ${currentUser.coins}`,
-        'xp-display': currentUser.xp,
-        'coin-display': currentUser.coins,
-        'user-welcome': currentUser.username
-    };
-
-    for (let id in elements) {
-        if (document.getElementById(id)) document.getElementById(id).innerText = elements[id];
-    }
-
-    // Rank systeem
-    let rank = "Beginner";
-    let color = "#00f2fe";
-    if (currentUser.xp >= 5000) { rank = "Dyloki Legend"; color = "#ff00ff"; }
-    else if (currentUser.xp >= 1000) { rank = "Elite Gamer"; color = "#4facfe"; }
-    else if (currentUser.xp >= 500) { rank = "Pro Player"; color = "#ffd700"; }
-
-    if (document.getElementById('rank-display')) {
-        document.getElementById('rank-display').innerText = rank;
-        document.getElementById('rank-display').style.color = color;
-    }
-    
-    if (document.getElementById('progress-bar')) {
-        let prog = (currentUser.xp % 1000) / 10; 
-        document.getElementById('progress-bar').style.width = prog + "%";
-    }
-}
-
-// Account Functies
-function register() {
-    const user = document.getElementById('reg-user').value;
+// --- AUTH FUNCTIES ---
+window.register = async function() {
+    const user = document.getElementById('reg-user').value.trim().toLowerCase();
     const pass = document.getElementById('reg-pass').value;
     if (!user || !pass) return alert("Vul alles in!");
 
-    let accounts = JSON.parse(localStorage.getItem('dyloki_accounts')) || [];
-    if (accounts.find(a => a.username === user)) return alert("Naam bestaat al!");
+    const userRef = ref(db, 'users/' + user);
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) return alert("Naam is al bezet!");
 
-    let newUser = { username: user, password: pass, xp: 0, coins: 0, inventory: [] };
-    accounts.push(newUser);
-    localStorage.setItem('dyloki_accounts', JSON.stringify(accounts));
-    alert("Account aangemaakt! Je kunt nu inloggen.");
-}
+    await set(userRef, { username: user, password: pass, xp: 0, coins: 0 });
+    alert("Account aangemaakt! Scroll naar 'Inloggen'.");
+};
 
-function login() {
-    const user = document.getElementById('log-user').value;
+window.login = async function() {
+    const user = document.getElementById('log-user').value.trim().toLowerCase();
     const pass = document.getElementById('log-pass').value;
-    
-    let accounts = JSON.parse(localStorage.getItem('dyloki_accounts')) || [];
-    let found = accounts.find(a => a.username === user && a.password === pass);
 
-    if (found) {
-        currentUser = found;
+    const userRef = ref(db, 'users/' + user);
+    const snapshot = await get(userRef);
+
+    if (snapshot.exists() && snapshot.val().password === pass) {
+        currentUser = snapshot.val();
         localStorage.setItem('dyloki_session', JSON.stringify(currentUser));
-        updateUI();
+        location.reload(); 
     } else {
-        alert("Foutieve inloggegevens!");
+        alert("Foutieve gegevens!");
     }
-}
+};
 
-function logout() {
+window.logout = function() {
     localStorage.removeItem('dyloki_session');
     location.reload();
+};
+
+// --- XP & UI ---
+function startPassiveEarning() {
+    if (!currentUser) return;
+    setInterval(async () => {
+        currentUser.xp += 1;
+        currentUser.coins += 5;
+        const userRef = ref(db, 'users/' + currentUser.username);
+        await update(userRef, { xp: currentUser.xp, coins: currentUser.coins });
+        localStorage.setItem('dyloki_session', JSON.stringify(currentUser));
+        updateUI();
+    }, 6000);
 }
 
-// Shop
-function buyItem(itemName, price) {
-    if (currentUser.coins >= price) {
-        currentUser.coins -= price;
-        currentUser.inventory.push(itemName);
-        saveUser();
-        updateUI();
-        alert(`Je hebt ${itemName} gekocht! Check je profiel.`);
-    } else {
-        alert("Niet genoeg coins!");
+function updateUI() {
+    if (currentUser) {
+        if (document.getElementById('auth-section')) document.getElementById('auth-section').style.display = 'none';
+        if (document.getElementById('main-content')) document.getElementById('main-content').style.display = 'block';
+        
+        const ids = {
+            'nav-xp': `XP: ${currentUser.xp}`,
+            'nav-coins': `🪙 ${currentUser.coins}`,
+            'xp-display': currentUser.xp,
+            'coin-display': currentUser.coins,
+            'user-welcome': currentUser.username.toUpperCase()
+        };
+
+        for (let id in ids) {
+            let el = document.getElementById(id);
+            if (el) el.innerText = ids[id];
+        }
+
+        let rank = "Novice";
+        if (currentUser.xp >= 5000) rank = "Dyloki Legend";
+        else if (currentUser.xp >= 1000) rank = "Elite Gamer";
+        else if (currentUser.xp >= 500) rank = "Pro Player";
+
+        if (document.getElementById('rank-display')) document.getElementById('rank-display').innerText = rank;
+        if (document.getElementById('progress-bar')) {
+            document.getElementById('progress-bar').style.width = (currentUser.xp % 500) / 5 + "%";
+        }
     }
 }
 
-// Intervals
-setInterval(updateProgress, 6000);
-window.onload = updateUI;
+updateUI();
+if (currentUser) startPassiveEarning();
