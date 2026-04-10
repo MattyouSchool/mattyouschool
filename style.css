@@ -13,7 +13,7 @@
     margin: 0; 
     padding: 0; 
     box-sizing: border-box; 
-    transition: all 0.3s ease; 
+    transition: all 0.2s ease; /* Iets snellere transitions voor professionaliteit */
 }
 
 body {
@@ -24,30 +24,29 @@ body {
     overflow-x: hidden;
 }
 
-/* NAVBAR */
+/* --- NAVBAR (FIX: Centered and Non-fixed to avoid overlapping) --- */
 .navbar {
     display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    padding: 20px 60px; 
-    background: rgba(5, 5, 5, 0.95);
-    backdrop-filter: blur(12px); 
+    flex-direction: column; /* Stapel logo boven links voor centreren */
+    align-items: center;   /* Centreer alles horizontaal */
+    padding: 20px 20px 10px; /* Iets minder padding onderaan */
+    background: #000; /* Solide zwart voor de balk zelf */
     border-bottom: 1px solid var(--border-light);
-    position: fixed; 
     width: 100%; 
-    top: 0; 
+    position: relative; /* NIET MEER FIXED om overlapping te voorkomen */
     z-index: 1000;
 }
 
 .logo { 
     font-family: 'Syncopate', sans-serif; 
-    font-size: 1.4rem; 
+    font-size: 1.2rem; /* Iets kleiner in centered mode */
     letter-spacing: 4px; 
     font-weight: 700; 
     border: 1px solid transparent; 
     padding: 5px 15px; 
     border-radius: 4px;
     cursor: pointer;
+    margin-bottom: 15px; /* Ruimte tussen logo en links */
 }
 
 .logo span { 
@@ -59,16 +58,19 @@ body {
     box-shadow: 0 0 15px var(--cyan-dim); 
 }
 
+/* De links zelf */
 .nav-links { 
     display: flex; 
-    gap: 30px; 
+    gap: 25px; /* Iets minder gap voor gecentreerde look */
     list-style: none; 
+    justify-content: center; /* Centreer de links zelf */
+    width: 100%;
 }
 
 .nav-links a { 
     text-decoration: none; 
     color: var(--text-muted); 
-    font-size: 0.8rem; 
+    font-size: 0.75rem; /* Iets kleiner voor professionaliteit */
     font-weight: 600; 
     text-transform: uppercase; 
 }
@@ -82,45 +84,36 @@ body {
     color: var(--cyan) !important; 
 }
 
-/* XP & RANK DISPLAY IN HEADER */
+/* XP & RANK DISPLAY (Geen plek meer in centered navbar, verplaatst naar header) */
 .header-stats {
-    display: flex; 
-    align-items: center; 
-    background: rgba(255, 255, 255, 0.03);
-    padding: 8px 15px; 
-    border-radius: 6px; 
-    border: 1px solid var(--border-light);
+    display: none; /* Verwijderd uit de navbar zelf om centreren niet te breken */
 }
 
-.header-stats:hover { 
-    border-color: var(--cyan); 
-    box-shadow: 0 0 10px var(--cyan-dim); 
-}
-
-.tag { 
-    background: var(--cyan-dim); 
-    color: var(--cyan); 
-    padding: 4px 10px; 
-    border-radius: 4px; 
-    font-size: 0.7rem; 
-    font-weight: 800; 
-    letter-spacing: 1px; 
-}
-
-/* HERO SECTION */
+/* --- HERO SECTION (FIX: Layout and Overlapping) --- */
 .hero-premium {
-    height: 80vh; 
+    min-height: 70vh; /* Gebruik min-height in plaats van height */
     display: flex; 
     align-items: center; 
     justify-content: center;
     text-align: center; 
+    /* radial-gradient voor de vibe, solide zwart voor de rest */
     background: radial-gradient(circle at 50% 50%, #111827 0%, #050505 100%);
+    padding: 40px 20px; /* Padding om te zorgen dat content niet aan de rand plakt */
+}
+
+.hero-content {
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .main-title { 
     font-family: 'Syncopate', sans-serif; 
-    font-size: 4rem; 
+    font-size: 4rem; /* Iets kleiner om overlapping bij titels te voorkomen op kleinere schermen */
     letter-spacing: -2px; 
+    line-height: 1.1; /* Zorgt dat de twee DYLOKI regels dicht bij elkaar staan maar niet overlappen */
+    margin-bottom: 20px;
 }
 
 .main-title span { 
@@ -134,16 +127,22 @@ body {
     font-size: 0.7rem; 
     letter-spacing: 5px; 
     display: block; 
-    margin-bottom: 20px; 
+    margin-bottom: 15px; /* Minder marge */
 }
 
 .hero-description {
     max-width: 600px;
-    margin: 20px auto 40px;
+    margin: 0 auto 40px; /* gecentreerde marge */
     color: var(--text-muted);
 }
 
-/* BUTTONS */
+/* --- BUTTONS & CTA --- */
+.cta-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Ruimte tussen de knoppen */
+}
+
 .btn-main { 
     background: var(--cyan); 
     color: #000; 
@@ -170,7 +169,6 @@ body {
     text-decoration: none; 
     font-weight: 800; 
     border: 1px solid var(--border-light); 
-    margin-left: 15px;
     display: inline-block;
 }
 
@@ -228,7 +226,6 @@ body {
     background: #000; 
     border-top: 1px solid var(--border-light); 
     text-align: center; 
-    margin-top: 50px; 
 }
 
 .footer-bottom p { 
