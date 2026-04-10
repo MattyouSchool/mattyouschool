@@ -3,39 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DYLOKI | Games</title>
+    <title>DYLOKI | Games Database</title>
     <link rel="stylesheet" href="../style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Syncopate:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar">
-        <div class="logo hover-glow">DY<span>LOKI</span></div>
+        <div class="logo hover-glow" onclick="window.location.href='../index.html'">DY<span>LOKI</span></div>
+        
         <ul class="nav-links">
             <li><a href="../index.html">Home</a></li>
             <li><a href="index.html" class="highlight-link">Games</a></li>
             <li><a href="https://www.youtube.com/@matyou333" target="_blank">YouTube</a></li>
             <li><a href="../shop/index.html">Shop</a></li>
         </ul>
+
         <div class="nav-spacer"></div>
     </nav>
 
     <header class="container" style="text-align: center; padding-top: 60px;">
-        <h1 style="font-family: 'Syncopate'; font-size: 2.5rem; letter-spacing: 6px;">GAME_DATABASE</h1>
+        <span class="eyebrow">MATTYOU STUDIOS™ DATABASE</span>
+        <h1 style="font-family: 'Syncopate'; font-size: 2.5rem; letter-spacing: 6px; margin-bottom: 20px;">GAME<span>_</span>LIBRARY</h1>
     </header>
 
     <main class="container">
         <div class="grid">
-            <div class="glass-panel interactive-border" style="text-align: center; padding: 30px;">
-                <span style="background: rgba(0, 229, 255, 0.15); color: var(--cyan); padding: 4px 10px; border-radius: 20px; font-size: 0.6rem; font-weight: 800;">OFFICIAL</span>
-                <h3 style="font-family: 'Syncopate'; margin: 20px 0; font-size: 1.2rem;">2D MINECRAFT</h3>
-                <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 25px;">De ultieme browser-ervaring van de klassieke sandbox game.</p>
-                <a href="https://mattyouschool.github.io/minecraft/" class="btn-main" target="_blank">PLAY NOW</a>
+            
+            <div class="glass-panel interactive-border" style="text-align: center; padding: 40px; border-radius: 12px; background: rgba(255,255,255,0.02);">
+                <span style="background: rgba(0, 229, 255, 0.15); color: var(--cyan); padding: 4px 12px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; letter-spacing: 1px;">PREMIUM RELEASE</span>
+                <h3 style="font-family: 'Syncopate'; margin: 25px 0; font-size: 1.5rem;">2D MINECRAFT</h3>
+                <p style="color: #94a3b8; margin-bottom: 30px; font-size: 0.9rem;">
+                    <strong>Mattyou Studios Edition</strong><br>
+                    De ultieme browser-ervaring van de klassieke sandbox game. Volledig geoptimaliseerd voor Dyloki.
+                </p>
+                <a href="https://mattyouschool.github.io/minecraft/" target="_blank" class="btn-main">NU SPELEN</a>
+            </div>
+
+            <div class="mission-card interactive-border" style="text-align: center; display: flex; flex-direction: column; justify-content: center; opacity: 0.5;">
+                <h3 style="font-family: 'Syncopate'; font-size: 1rem;">PROJECT_ALPHA</h3>
+                <p style="font-size: 0.8rem;">Under Development</p>
             </div>
         </div>
+
+        <section style="margin-top: 100px;">
+            <div style="border-bottom: 1px solid var(--border-light); margin-bottom: 50px; text-align: center; padding-bottom: 20px;">
+                <h2 style="font-family: 'Syncopate'; font-size: 1.4rem; letter-spacing: 4px;">BASIC<span>_</span>GAMES</h2>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">Snelle mini-games voor tussendoor</p>
+            </div>
+            
+            <div class="grid">
+                <div class="mission-card interactive-border" style="text-align: center;">
+                    <div style="font-size: 2.5rem; margin-bottom: 15px;">🖱️</div>
+                    <h3 style="font-size: 0.9rem; letter-spacing: 2px;">MATTYOU CLICKER</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 25px;">Klik op de M en verzamel zoveel mogelijk Mattyou Points.</p>
+                    <a href="basic/clicker.html" class="btn-sub" style="margin-left: 0; display: block; width: 100%;">START GAME</a>
+                </div>
+
+                <div class="mission-card interactive-border" style="text-align: center;">
+                    <div style="font-size: 2.5rem; margin-bottom: 15px;">🐍</div>
+                    <h3 style="font-size: 0.9rem; letter-spacing: 2px;">RETRO SNAKE</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 25px;">Eet de rode blokjes en wordt de langste slang van de server.</p>
+                    <a href="basic/snake.html" class="btn-sub" style="margin-left: 0; display: block; width: 100%;">START GAME</a>
+                </div>
+
+                <div class="mission-card interactive-border" style="text-align: center; border-style: dashed; opacity: 0.4;">
+                    <div style="font-size: 2.5rem; margin-bottom: 15px; filter: grayscale(1);">🎮</div>
+                    <h3 style="font-size: 0.9rem; letter-spacing: 2px;">SOON</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 25px;">Nieuwe mini-game in aantocht.</p>
+                    <button class="btn-sub" style="margin-left: 0; width: 100%; cursor: not-allowed;" disabled>LOCKED</button>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer class="footer-main">
-        <p>Made by <strong>Mattyou Studios™ x Dylano</strong></p>
+        <div class="footer-bottom">
+            <p>Made by <strong>Mattyou Studios™ x Dylano</strong></p>
+            <p style="font-size: 0.65rem; margin-top: 10px; opacity: 0.5;">&copy; 2026 ALL RIGHTS RESERVED.</p>
+        </div>
     </footer>
+
+    <script src="../xp-system.js"></script>
 </body>
 </html>
