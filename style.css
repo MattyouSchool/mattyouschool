@@ -8,12 +8,11 @@
     --border-light: rgba(255, 255, 255, 0.08);
 }
 
-/* Base Reset & Smooth Transitions */
 * { 
     margin: 0; 
     padding: 0; 
     box-sizing: border-box; 
-    transition: all 0.2s ease; /* Iets snellere transitions voor professionaliteit */
+    transition: all 0.2s ease; 
 }
 
 body {
@@ -24,239 +23,131 @@ body {
     overflow-x: hidden;
 }
 
-/* --- NAVBAR (FIX: Centered and Non-fixed to avoid overlapping) --- */
+/* --- NAVBAR (Logo links, Links gecentreerd) --- */
 .navbar {
     display: flex; 
-    flex-direction: column; /* Stapel logo boven links voor centreren */
-    align-items: center;   /* Centreer alles horizontaal */
-    padding: 20px 20px 10px; /* Iets minder padding onderaan */
-    background: #000; /* Solide zwart voor de balk zelf */
+    align-items: center;
+    justify-content: space-between; /* Zorgt voor de spreiding */
+    padding: 15px 40px; 
+    background: #000;
     border-bottom: 1px solid var(--border-light);
     width: 100%; 
-    position: relative; /* NIET MEER FIXED om overlapping te voorkomen */
+    position: relative;
     z-index: 1000;
 }
 
 .logo { 
     font-family: 'Syncopate', sans-serif; 
-    font-size: 1.2rem; /* Iets kleiner in centered mode */
-    letter-spacing: 4px; 
+    font-size: 1.1rem; 
+    letter-spacing: 3px; 
     font-weight: 700; 
     border: 1px solid transparent; 
-    padding: 5px 15px; 
+    padding: 5px 10px; 
     border-radius: 4px;
     cursor: pointer;
-    margin-bottom: 15px; /* Ruimte tussen logo en links */
+    flex: 1; /* Neemt ruimte in aan de linkerkant */
 }
 
-.logo span { 
-    color: var(--cyan); 
-}
+.logo span { color: var(--cyan); }
+.logo:hover { border-color: var(--cyan); box-shadow: 0 0 15px var(--cyan-dim); }
 
-.logo:hover { 
-    border-color: var(--cyan); 
-    box-shadow: 0 0 15px var(--cyan-dim); 
-}
-
-/* De links zelf */
+/* De links in het midden */
 .nav-links { 
     display: flex; 
-    gap: 25px; /* Iets minder gap voor gecentreerde look */
+    gap: 30px; 
     list-style: none; 
-    justify-content: center; /* Centreer de links zelf */
-    width: 100%;
+    justify-content: center;
+    flex: 2; /* Geeft de links de meeste ruimte in het midden */
 }
 
 .nav-links a { 
     text-decoration: none; 
     color: var(--text-muted); 
-    font-size: 0.75rem; /* Iets kleiner voor professionaliteit */
+    font-size: 0.75rem; 
     font-weight: 600; 
     text-transform: uppercase; 
 }
 
-.nav-links a:hover { 
-    color: var(--cyan); 
-    text-shadow: 0 0 8px var(--cyan); 
+.nav-links a:hover { color: var(--cyan); text-shadow: 0 0 8px var(--cyan); }
+
+/* Spacer om de balans te houden (voor de rechterkant) */
+.nav-spacer {
+    flex: 1;
 }
 
-.highlight-link { 
-    color: var(--cyan) !important; 
-}
+.highlight-link { color: var(--cyan) !important; }
 
-/* XP & RANK DISPLAY (Geen plek meer in centered navbar, verplaatst naar header) */
-.header-stats {
-    display: none; /* Verwijderd uit de navbar zelf om centreren niet te breken */
-}
-
-/* --- HERO SECTION (FIX: Layout and Overlapping) --- */
+/* --- HERO SECTION (Kleiner gemaakt) --- */
 .hero-premium {
-    min-height: 70vh; /* Gebruik min-height in plaats van height */
+    min-height: 50vh; /* Verlaagd van 70/80 naar 50 voor een compacter uiterlijk */
     display: flex; 
     align-items: center; 
     justify-content: center;
     text-align: center; 
-    /* radial-gradient voor de vibe, solide zwart voor de rest */
     background: radial-gradient(circle at 50% 50%, #111827 0%, #050505 100%);
-    padding: 40px 20px; /* Padding om te zorgen dat content niet aan de rand plakt */
+    padding: 60px 20px;
 }
 
 .hero-content {
-    padding: 0 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    max-width: 800px;
 }
 
 .main-title { 
     font-family: 'Syncopate', sans-serif; 
-    font-size: 4rem; /* Iets kleiner om overlapping bij titels te voorkomen op kleinere schermen */
-    letter-spacing: -2px; 
-    line-height: 1.1; /* Zorgt dat de twee DYLOKI regels dicht bij elkaar staan maar niet overlappen */
-    margin-bottom: 20px;
+    font-size: 3rem; /* Iets kleiner gemaakt */
+    letter-spacing: -1px; 
+    line-height: 1.2;
+    margin-bottom: 15px;
 }
 
-.main-title span { 
-    color: var(--cyan); 
-    text-shadow: 0 0 30px var(--cyan-dim); 
-}
+.main-title span { color: var(--cyan); text-shadow: 0 0 25px var(--cyan-dim); }
 
 .eyebrow { 
     color: var(--cyan); 
     font-weight: 800; 
-    font-size: 0.7rem; 
-    letter-spacing: 5px; 
+    font-size: 0.65rem; 
+    letter-spacing: 4px; 
     display: block; 
-    margin-bottom: 15px; /* Minder marge */
+    margin-bottom: 10px; 
 }
 
 .hero-description {
-    max-width: 600px;
-    margin: 0 auto 40px; /* gecentreerde marge */
+    max-width: 500px;
+    margin: 0 auto 30px;
     color: var(--text-muted);
+    font-size: 0.95rem;
 }
 
-/* --- BUTTONS & CTA --- */
+/* --- BUTTONS --- */
 .cta-group {
     display: flex;
     justify-content: center;
-    gap: 15px; /* Ruimte tussen de knoppen */
+    gap: 15px;
 }
 
 .btn-main { 
-    background: var(--cyan); 
-    color: #000; 
-    padding: 14px 30px; 
-    border-radius: 4px; 
-    text-decoration: none; 
-    font-weight: 800; 
-    border: 1px solid var(--cyan); 
-    cursor: pointer;
-    display: inline-block;
+    background: var(--cyan); color: #000; padding: 12px 25px; 
+    border-radius: 4px; text-decoration: none; font-weight: 800; 
+    font-size: 0.85rem; border: 1px solid var(--cyan);
 }
 
-.btn-main:hover { 
-    background: transparent; 
-    color: var(--cyan); 
-    box-shadow: 0 0 20px var(--cyan-dim); 
-}
+.btn-main:hover { background: transparent; color: var(--cyan); box-shadow: 0 0 20px var(--cyan-dim); }
 
 .btn-sub { 
-    background: transparent; 
-    color: #fff; 
-    padding: 14px 30px; 
-    border-radius: 4px; 
-    text-decoration: none; 
-    font-weight: 800; 
-    border: 1px solid var(--border-light); 
-    display: inline-block;
+    background: transparent; color: #fff; padding: 12px 25px; 
+    border-radius: 4px; text-decoration: none; font-weight: 800; 
+    font-size: 0.85rem; border: 1px solid var(--border-light); 
 }
 
-.btn-sub:hover { 
-    border-color: var(--cyan); 
-    box-shadow: 0 0 15px var(--cyan-dim); 
-}
+/* --- OVERIG --- */
+.container { padding: 40px 10%; max-width: 1400px; margin: 0 auto; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
 
-/* GRID & CONTAINERS */
-.container { 
-    padding: 80px 10%; 
-    max-width: 1400px; 
-    margin: 0 auto; 
-}
+.interactive-border { border: 1px solid var(--border-light); }
+.interactive-border:hover { border-color: var(--cyan); box-shadow: 0 0 20px var(--cyan-dim); transform: translateY(-3px); }
 
-.grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-    gap: 30px; 
-}
+.mission-card { background: var(--bg-slate); padding: 30px; border-radius: 8px; }
+.mission-card h3 { color: var(--cyan); font-family: 'Syncopate', sans-serif; font-size: 0.75rem; margin-bottom: 10px; }
 
-/* CARDS & PANELS */
-.interactive-border { 
-    border: 1px solid var(--border-light); 
-}
-
-.interactive-border:hover { 
-    border-color: var(--cyan); 
-    box-shadow: 0 0 20px var(--cyan-dim); 
-    transform: translateY(-5px); 
-}
-
-.mission-card { 
-    background: var(--bg-slate); 
-    padding: 40px; 
-    border-radius: 8px; 
-}
-
-.mission-card h3 {
-    color: var(--cyan);
-    font-family: 'Syncopate', sans-serif;
-    font-size: 0.8rem;
-    margin-bottom: 15px;
-}
-
-.glass-panel { 
-    background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 100%); 
-    padding: 50px; 
-    border-radius: 12px; 
-}
-
-/* FOOTER */
-.footer-main { 
-    padding: 60px 10% 30px; 
-    background: #000; 
-    border-top: 1px solid var(--border-light); 
-    text-align: center; 
-}
-
-.footer-bottom p { 
-    font-size: 0.85rem; 
-    color: var(--text-bright); 
-    margin-bottom: 5px;
-}
-
-.footer-bottom strong { 
-    color: var(--cyan); 
-}
-
-.footer-bottom p:last-child {
-    opacity: 0.5;
-    font-size: 0.7rem;
-}
-
-/* SCROLLBAR STYLING */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--bg-deep);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--bg-slate);
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--cyan);
-}
+.footer-main { padding: 40px 10% 20px; background: #000; border-top: 1px solid var(--border-light); text-align: center; }
+.footer-bottom p { font-size: 0.8rem; color: var(--text-bright); }
