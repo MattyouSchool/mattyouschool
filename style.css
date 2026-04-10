@@ -1,96 +1,236 @@
-/* --- DYLOKI PREMIUM LIGHT-BLUE V5.2 --- */
+/* --- DYLOKI ULTIMATE PREMIUM BLUE V6.0 --- */
+/* Mattyou Studios™ x Dylano - Luxury UI */
+
 :root {
     --primary-blue: #00d2ff;
-    --deep-blue: #0f172a;       /* Lichter dan zwart, echt blauwig */
-    --surface-blue: #1e293b;    /* De kleur voor de kaartjes */
-    --accent-glow: rgba(0, 210, 255, 0.4);
-    --text-white: #f8fafc;
+    --secondary-blue: #3a7bd5;
+    --deep-navy: #0f172a;       /* Achtergrondkleur */
+    --surface-blue: rgba(30, 41, 59, 0.7); /* Transparanter voor glaseffect */
+    --accent-glow: rgba(0, 210, 255, 0.6);
+    --gold: #ffd700;
+    --text-main: #f1f5f9;
+    --border-premium: rgba(0, 210, 255, 0.3);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    transition: all 0.3s ease; /* Zorgt dat alles vloeiend beweegt */
+}
 
 body { 
     font-family: 'Poppins', sans-serif; 
-    /* Een verloop van lichter blauw naar het diepe blauw */
     background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%); 
-    color: var(--text-white);
+    color: var(--text-main);
     min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
 }
 
-/* Navigatiebalk */
+/* --- NAVIGATIE (LUXE EDITIE) --- */
 .navbar { 
-    display: flex; justify-content: space-between; align-items: center; 
-    padding: 20px 50px; background: rgba(15, 23, 42, 0.9); 
-    backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 1000; 
-    border-bottom: 3px solid var(--primary-blue);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 25px 60px; /* Iets ruimer */
+    background: rgba(15, 23, 42, 0.95); 
+    backdrop-filter: blur(20px); 
+    position: sticky; 
+    top: 0; 
+    z-index: 1000; 
+    border-bottom: 2px solid var(--primary-blue);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 210, 255, 0.2);
 }
 
-.logo { font-family: 'Syncopate', sans-serif; font-size: 1.6rem; letter-spacing: 5px; }
-.logo span { color: var(--primary-blue); text-shadow: 0 0 10px var(--primary-blue); }
+.logo { 
+    font-family: 'Syncopate', sans-serif; 
+    font-size: 1.8rem; 
+    letter-spacing: 6px; 
+    font-weight: 700;
+}
 
-.nav-links { display: flex; gap: 30px; list-style: none; }
+.logo span { 
+    color: var(--primary-blue); 
+    text-shadow: 0 0 15px var(--primary-blue); 
+}
+
+.nav-links { 
+    display: flex; 
+    gap: 40px; 
+    list-style: none; 
+}
+
 .nav-links a { 
-    text-decoration: none; color: #fff; font-size: 0.8rem; font-weight: 700; 
-    text-transform: uppercase; transition: 0.3s; opacity: 0.7;
+    text-decoration: none; 
+    color: #fff; 
+    font-size: 0.8rem; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    letter-spacing: 2px;
+    opacity: 0.6; 
 }
-.nav-links a:hover { opacity: 1; color: var(--primary-blue); text-shadow: 0 0 5px var(--primary-blue); }
+
+.nav-links a:hover { 
+    opacity: 1; 
+    color: var(--primary-blue); 
+    text-shadow: 0 0 8px var(--primary-blue); 
+    transform: translateY(-1px);
+}
 
 .user-stats-nav { 
-    background: rgba(0, 210, 255, 0.1); padding: 8px 20px; border-radius: 50px; 
-    border: 1px solid var(--primary-blue); font-weight: bold; color: var(--primary-blue);
+    background: rgba(0, 210, 255, 0.08); 
+    padding: 10px 25px; 
+    border-radius: 100px; 
+    border: 1px solid var(--primary-blue); 
+    font-weight: bold; 
+    color: var(--primary-blue);
+    box-shadow: inset 0 0 10px rgba(0, 210, 255, 0.1);
 }
 
-/* Hero Sectie */
+/* --- HERO (DE GROTE TITEL) --- */
 .hero-premium { 
-    height: 350px; display: flex; align-items: center; justify-content: center; text-align: center;
-    background: linear-gradient(180deg, rgba(0, 210, 255, 0.15) 0%, transparent 100%);
+    height: 380px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    text-align: center;
+    background: linear-gradient(180deg, rgba(0, 210, 255, 0.18) 0%, transparent 100%);
 }
 
 .main-title { 
-    font-family: 'Syncopate', sans-serif; font-size: 4.5rem; letter-spacing: 10px;
-    color: #fff; text-shadow: 0 0 25px var(--accent-glow);
+    font-family: 'Syncopate', sans-serif; 
+    font-size: 5rem; 
+    letter-spacing: 12px;
+    background: linear-gradient(to right, #fff 0%, #00d2ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 25px var(--accent-glow));
+    margin-bottom: 10px;
 }
 
-/* Vakken (Cards) */
-.container { padding: 40px 10%; max-width: 1400px; margin: 0 auto; }
+/* --- VAKKEN (CARDS & LAYOUT) --- */
+.container { 
+    padding: 60px 10%; 
+    max-width: 1400px; 
+    margin: 0 auto; 
+}
 
 .glass-card { 
     background: var(--surface-blue); 
-    border: 1px solid rgba(0, 210, 255, 0.3); 
-    padding: 40px; border-radius: 25px; 
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(0, 210, 255, 0.05);
+    border: 2px solid rgba(0, 210, 255, 0.2); 
+    padding: 50px; 
+    border-radius: 30px; 
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(0, 210, 255, 0.05);
 }
 
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+.grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 30px; 
+}
 
 .stat-box, .auth-box, .feature-card { 
-    background: rgba(255, 255, 255, 0.03); padding: 30px; border-radius: 20px; 
-    border: 1px solid rgba(0, 210, 255, 0.2); text-align: center; transition: 0.3s;
+    background: rgba(255, 255, 255, 0.01); 
+    padding: 40px; 
+    border-radius: 20px; 
+    border: 1px solid var(--border-premium); 
+    text-align: center; 
 }
 
-.stat-box:hover { border-color: var(--primary-blue); transform: translateY(-5px); background: rgba(0, 210, 255, 0.05); }
+.stat-box:hover { 
+    border-color: var(--primary-blue); 
+    transform: translateY(-8px) scale(1.01); 
+    background: rgba(0, 210, 255, 0.03); 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(0, 210, 255, 0.1);
+}
 
-/* Inputs & Buttons */
+/* --- PREMIUM INPUTS & BUTTONS --- */
 input { 
-    background: #0f172a; border: 1px solid rgba(0, 210, 255, 0.4); 
-    padding: 15px; color: #fff; width: 100%; border-radius: 12px; margin-bottom: 15px; outline: none; 
+    background: #0f172a; 
+    border: 2px solid rgba(0, 210, 255, 0.3); 
+    padding: 16px; 
+    color: #fff; 
+    width: 100%; 
+    border-radius: 12px; 
+    margin-bottom: 18px; 
+    outline: none; 
+    font-weight: 600;
 }
-input:focus { border-color: var(--primary-blue); box-shadow: 0 0 15px rgba(0, 210, 255, 0.2); }
+
+input:focus { 
+    border-color: #fff; 
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.3); 
+    background: rgba(0, 210, 255, 0.05);
+}
 
 .btn-primary { 
-    background: linear-gradient(90deg, #00d2ff, #3a7bd5); 
-    color: #fff; border: none; padding: 16px; border-radius: 12px; font-weight: 900; 
-    width: 100%; cursor: pointer; text-transform: uppercase; letter-spacing: 2px;
+    background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%); 
+    color: #000; /* Zwart voor contrast, luxer */
+    border: none; 
+    padding: 18px; 
+    border-radius: 12px; 
+    font-weight: 900; 
+    width: 100%; 
+    cursor: pointer; 
+    text-transform: uppercase; 
+    letter-spacing: 2px;
+}
+
+.btn-primary:hover { 
+    transform: scale(1.02); 
+    filter: brightness(1.1);
+    box-shadow: 0 10px 25px rgba(0, 210, 255, 0.4);
 }
 
 .btn-secondary { 
-    background: transparent; border: 2px solid var(--primary-blue); color: var(--primary-blue); 
-    padding: 14px; border-radius: 12px; width: 100%; font-weight: 700; cursor: pointer;
+    background: transparent; 
+    border: 2px solid var(--primary-blue); 
+    color: var(--primary-blue); 
+    padding: 16px; 
+    border-radius: 12px; 
+    width: 100%; 
+    font-weight: 700; 
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-/* XP Balk */
-.progress-container { background: #0f172a; height: 14px; border-radius: 20px; margin-top: 30px; border: 1px solid rgba(0, 210, 255, 0.3); overflow: hidden; }
-.progress-bar { background: linear-gradient(90deg, #00d2ff, #3a7bd5); height: 100%; width: 0%; transition: 2s ease-in-out; box-shadow: 0 0 15px var(--primary-blue); }
+.btn-secondary:hover { 
+    background: rgba(0, 210, 255, 0.05); 
+    transform: scale(1.01);
+}
 
-.footer-premium { text-align: center; padding: 50px; border-top: 1px solid rgba(0, 210, 255, 0.2); opacity: 0.7; }
+/* --- XP BALK (ULTRA-NEON) --- */
+.progress-container { 
+    background: #0f172a; 
+    height: 16px; 
+    border-radius: 20px; 
+    margin-top: 35px; 
+    border: 2px solid rgba(0, 210, 255, 0.3); 
+    overflow: hidden; 
+}
+
+.progress-bar { 
+    background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%); 
+    height: 100%; 
+    width: 0%; 
+    transition: 1.8s ease-in-out; 
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.8), 0 0 5px #fff; 
+    border-radius: 100px;
+}
+
+.footer-premium { 
+    text-align: center; 
+    padding: 60px; 
+    border-top: 2px solid rgba(0, 210, 255, 0.2); 
+    opacity: 0.6; 
+}
+
+/* Extra Premium Witruimte Fix */
+.stat-box p { 
+    font-size: 2.2rem; 
+    font-weight: 900; 
+    margin: 10px 0;
+}
