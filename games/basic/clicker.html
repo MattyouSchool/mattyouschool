@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>DYLOKI | Mattyou Clicker</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+    <h1 style="font-family: 'Syncopate'; margin-bottom: 20px;">CLICKER</h1>
+    <div class="glass-panel interactive-border" style="text-align: center; padding: 50px;">
+        <h2 id="score" style="font-size: 3rem; color: var(--cyan);">0</h2>
+        <p style="margin-bottom: 20px;">MATTYOU POINTS</p>
+        <button onclick="addPoint()" class="btn-main" style="padding: 40px; border-radius: 50%; font-size: 2rem;">M</button>
+    </div>
+    <a href="../index.html" style="margin-top: 30px; color: var(--text-muted); text-decoration: none;">← Terug naar Games</a>
+
+    <script>
+        let count = 0;
+        function addPoint() {
+            count++;
+            document.getElementById('score').innerText = count;
+        }
+    </script>
+</body>
+</html>
