@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// JOUW FIREBASE CONFIG
+// GEKOPPELD AAN JOUW REALTIME DATABASE (EUROPE)
 const firebaseConfig = {
     apiKey: "AIzaSyCi5LxXD-FGvdmlZGXPENYBWraWdDUNck0",
     authDomain: "dyloki-cloud.firebaseapp.com",
@@ -9,12 +9,12 @@ const firebaseConfig = {
     storageBucket: "dyloki-cloud.firebasestorage.app",
     messagingSenderId: "486650834826",
     appId: "1:486650834826:web:d5efeb0af6cc574d0c2273",
-    measurementId: "G-40YRW3TTGR"
+    measurementId: "G-40YRW3TTGR",
+    databaseURL: "https://dyloki-cloud-default-rtdb.europe-west1.firebasedatabase.app" // DIT IS DE FIX
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
 let currentUser = JSON.parse(localStorage.getItem('dyloki_session')) || null;
 
 // --- REGISTREREN ---
@@ -28,7 +28,7 @@ window.register = async function() {
     const snapshot = await get(userRef);
 
     if(snapshot.exists()) {
-        alert("Deze naam is al bezet in de database!");
+        alert("GEBRUIKER BESTAAT AL");
     } else {
         await set(userRef, {
             username: user,
@@ -37,7 +37,7 @@ window.register = async function() {
             coins: 0,
             rank: "Novice"
         });
-        alert("Account succesvol aangemaakt! Je kunt nu inloggen.");
+        alert("ACCOUNT AANGEMAAKT! Je kunt nu inloggen.");
     }
 };
 
@@ -54,47 +54,41 @@ window.login = async function() {
         localStorage.setItem('dyloki_session', JSON.stringify(currentUser));
         location.reload();
     } else {
-        alert("Onjuiste gebruikersnaam of wachtwoord.");
+        alert("FOUT: GEGEVENS ONJUIST");
     }
 };
 
-// --- UITLOGGEN ---
 window.logout = function() {
     localStorage.removeItem('dyloki_session');
     location.reload();
 };
 
-// --- XP SYSTEEM ---
 function startPassiveEarning() {
     if(!currentUser) return;
     setInterval(async () => {
-        currentUser.xp += 1;
-        currentUser.coins += 5;
-        
+        currentUser.xp += 2;
+        currentUser.coins += 10;
         const userRef = ref(db, 'accounts/' + currentUser.username);
         await update(userRef, { xp: currentUser.xp, coins: currentUser.coins });
-        
         localStorage.setItem('dyloki_session', JSON.stringify(currentUser));
         updateUI();
-    }, 5000); // Elke 5 seconden winst
+    }, 5000);
 }
 
 function updateUI() {
     if(currentUser) {
         document.getElementById('auth-section').style.display = 'none';
         document.getElementById('main-content').style.display = 'block';
-        
         document.getElementById('nav-xp').innerText = "XP: " + currentUser.xp;
         document.getElementById('nav-coins').innerText = "🪙 " + currentUser.coins;
         document.getElementById('xp-display').innerText = currentUser.xp;
         document.getElementById('coin-display').innerText = currentUser.coins;
         document.getElementById('user-welcome').innerText = currentUser.username.toUpperCase();
-
+        
         let rank = "NOVICE";
         if(currentUser.xp >= 1000) rank = "ELITE";
         if(currentUser.xp >= 5000) rank = "CYBER LORD";
         document.getElementById('rank-display').innerText = rank;
-        
         document.getElementById('progress-bar').style.width = (currentUser.xp % 100) + "%";
     }
 }
