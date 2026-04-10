@@ -2,53 +2,68 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>Dyloki | Coin Shop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DYLOKI | Premium Shop</title>
     <link rel="stylesheet" href="../style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Poppins:wght@300;600;900&display=swap" rel="stylesheet">
 </head>
 <body>
+
     <nav class="navbar">
-        <div class="logo">DYLOKI<span>.</span></div>
+        <div class="logo">DY<span>LOKI</span></div>
         <ul class="nav-links">
-            <li><a href="../">Home</a></li>
-            <li><a href="../games/">Games</a></li>
-            <li><a href="../shop/">Shop</a></li>
-            <li><a href="../about/">About</a></li>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../games/index.html">Games</a></li>
+            <li><a href="../shop/index.html" style="color: #00f2fe; opacity: 1;">Shop</a></li>
+            <li><a href="../about/index.html">About</a></li>
         </ul>
         <div class="user-stats-nav">
             <span id="nav-xp">XP: 0</span> | <span id="nav-coins">🪙 0</span>
         </div>
     </nav>
 
-    <main class="container">
-        <div class="status-card" style="text-align:center;">
-            <h1>Dyloki <span class="highlight">Black Market</span></h1>
-            <p>Geef je coins uit aan exclusieve Mattyou Studios™ extra's.</p>
+    <header class="hero-premium">
+        <div class="hero-content">
+            <h1 class="main-title">THE SHOP</h1>
+            <p class="subtitle">MATTYOU STUDIOS™ EXCLUSIVES</p>
+            <div class="badge-row">
+                <span class="badge">MARKETPLACE</span>
+                <span class="badge">V4.0 CLOUD</span>
+            </div>
         </div>
+    </header>
 
-        <div class="grid">
-            <div class="stat-item card-hover">
-                <h3>Starter Pack</h3>
-                <p>Een unieke badge bij je naam.</p>
-                <p class="price">🪙 250</p>
-                <button class="buy-btn" onclick="buyItem('Starter Badge', 250)">KOOP</button>
+    <main class="container">
+        <section class="glass-card">
+            <h2 style="text-align:center; margin-bottom: 40px; font-family: 'Syncopate';">UPGRADES</h2>
+            <div class="grid">
+                <div class="stat-box">
+                    <div style="font-size: 3rem; margin-bottom: 15px;">👑</div>
+                    <h3>PREMIUM RANK</h3>
+                    <p style="color: #ffd700; font-weight: 900;">5000 COINS</p>
+                    <button class="btn-primary" style="margin-top:20px;">PURCHASE</button>
+                </div>
+                <div class="stat-box">
+                    <div style="font-size: 3rem; margin-bottom: 15px;">🚀</div>
+                    <h3>XP BOOSTER (2X)</h3>
+                    <p style="color: #ffd700; font-weight: 900;">2500 COINS</p>
+                    <button class="btn-primary" style="margin-top:20px;">PURCHASE</button>
+                </div>
+                <div class="stat-box">
+                    <div style="font-size: 3rem; margin-bottom: 15px;">🎨</div>
+                    <h3>NAME COLOR</h3>
+                    <p style="color: #ffd700; font-weight: 900;">1000 COINS</p>
+                    <button class="btn-primary" style="margin-top:20px;">PURCHASE</button>
+                </div>
             </div>
-            <div class="stat-item card-hover">
-                <h3>Gold Theme</h3>
-                <p>Verander je interface naar goud.</p>
-                <p class="price">🪙 1000</p>
-                <button class="buy-btn" onclick="buyItem('Gold Theme', 1000)">KOOP</button>
-            </div>
-            <div class="stat-item card-hover">
-                <h3>Ultra Rank</h3>
-                <p>Directe toegang tot beta games.</p>
-                <p class="price">🪙 5000</p>
-                <button class="buy-btn" onclick="buyItem('Ultra Rank', 5000)">KOOP</button>
-            </div>
-        </div>
+        </section>
     </main>
 
-    <footer><p>Dyloki is made by <strong>mattyou studios™ x Dylano</strong></p></footer>
-    <script src="../script.js"></script>
+    <footer class="footer-premium">
+        <p>Made by <strong>mattyou studios™ x Dylano</strong></p>
+        <p style="font-size: 0.7rem; letter-spacing: 2px; margin-top: 10px;">© 2026 DYLOKI SYSTEMS</p>
+    </footer>
+
+    <script type="module" src="../script.js"></script>
 </body>
 </html>
