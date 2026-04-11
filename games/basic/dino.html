@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DYLOKI | Cyber Run</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>#gameCanvas { background: #000; border-bottom: 2px solid var(--cyan); display: block; margin: 50px auto; }</style>
+</head>
+<body style="text-align: center; background: #050505; color: white;">
+    <h1 style="font-family: 'Syncopate'; padding-top: 50px;">CYBER RUN</h1>
+    <canvas id="gameCanvas" width="600" height="200"></canvas>
+    <p style="color: var(--text-muted);">Spatie om te springen</p>
+    <a href="/games/" style="color: var(--cyan); text-decoration: none;">← Terug naar Games</a>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let dino = { x: 50, y: 150, w: 40, h: 40, dy: 0, jump: -12, gravity: 0.6, grounded: false };
+        function update() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            dino.dy += dino.gravity; dino.y += dino.dy;
+            if (dino.y > 150) { dino.y = 150; dino.dy = 0; dino.grounded = true; }
+            ctx.fillStyle = "#00e5ff"; ctx.fillRect(dino.x, dino.y, dino.w, dino.h);
+            requestAnimationFrame(update);
+        }
+        window.addEventListener('keydown', e => { if (e.code === 'Space' && dino.grounded) { dino.dy = dino.jump; dino.grounded = false; } });
+        update();
+    </script>
+</body>
+</html>
