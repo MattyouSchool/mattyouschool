@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DYLOKI | Galaxy Defense</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body style="text-align: center; background: #000; color: white;">
+    <h1 style="font-family: 'Syncopate'; padding-top: 30px;">GALAXY DEFENSE</h1>
+    <canvas id="game" width="400" height="500" style="border: 2px solid var(--cyan); margin: 20px auto; display: block;"></canvas>
+    <a href="/games/" style="color: var(--cyan); text-decoration: none;">← Terug naar Games</a>
+    <script>
+        const canvas = document.getElementById('game');
+        const ctx = canvas.getContext('2d');
+        let ship = { x: 180, y: 460, w: 40, h: 20 };
+        function draw() {
+            ctx.clearRect(0,0,400,500);
+            ctx.fillStyle = "#00e5ff";
+            ctx.fillRect(ship.x, ship.y, ship.w, ship.h);
+            requestAnimationFrame(draw);
+        }
+        window.addEventListener('keydown', e => {
+            if(e.key === "ArrowLeft" && ship.x > 0) ship.x -= 20;
+            if(e.key === "ArrowRight" && ship.x < 360) ship.x += 20;
+        });
+        draw();
+    </script>
+</body>
+</html>
