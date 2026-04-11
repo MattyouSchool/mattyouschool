@@ -1,0 +1,339 @@
+<meta charset="UTF-8">
+    <title>Mattyou Shooter School Edition</title>
+    <style>
+        /* Aangepast naar Fullscreen */
+        #mattyou-game-frame {
+            width: 100vw; 
+            height: 100vh; 
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #000; 
+            overflow: hidden; 
+        }
+        body { margin: 0; font-family: 'Arial Black', sans-serif; background: #111; color: white; overflow: hidden; }
+        
+        #hud { position: absolute; top: 20px; left: 20px; z-index: 10; pointer-events: none; display: none; text-shadow: 2px 2px #000; }
+        #crosshair { position: absolute; top: 50%; left: 50%; width: 10px; height: 10px; border: 2px solid #fff; border-radius: 50%; transform: translate(-50%, -50%); z-index: 5; display: none; }
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
+        .menu-card { background: #111; padding: 25px; border: 2px solid #444; text-align: center; min-width: 350px; }
+        .hidden { display: none !important; }
+        button { width: 100%; padding: 10px; margin: 5px 0; cursor: pointer; background: #222; border: 1px solid #444; color: white; font-weight: bold; font-size: 14px; }
+        button:hover { background: #fff; color: #000; }
+        .key-row { display: flex; justify-content: space-between; align-items: center; margin: 5px 0; font-size: 12px; }
+        .key-btn { width: 100px; padding: 5px; background: #333; color: white; border: 1px solid #555; }
+        #mathQuestion { font-size: 40px; color: #00ff00; margin: 10px; font-family: 'Courier New', monospace; }
+        #mathDisplay { font-size: 50px; color: #fff; border-bottom: 3px solid #00ff00; min-width: 100px; margin: 10px; height: 60px; }
+    </style>
+
+<div id="mattyou-game-frame">
+    <div id="hud">
+        <div style="font-size: 24px;">HP: <span id="hpLabel" style="color: #00ff00;">500</span></div>
+        <div style="font-size: 18px; color: #00ccff;">LEVEL: <span id="levelLabel">1</span></div>
+        <div style="font-size: 14px;">TARGETS: <span id="botCount">0</span></div>
+    </div>
+    <div id="crosshair"></div>
+
+    <div id="mainMenu" class="overlay">
+        <div class="menu-card">
+            <h1>MATTYOU SHOOTER SCHOOL EDITION</h1>
+            <p style="color: #00ccff;">READY TO PLAY?</p>
+            <button onclick="startGame()">PLAY GAME</button>
+            <button onclick="showMenu('settingsMenu')">SETTINGS</button>
+            <button onclick="showMenu('modsMenu')">MODS</button>
+            <div style="font-size: 12px; color: #888; margin-top: 10px;">Sub op @mattyou voor meer updates!</div>
+        </div>
+    </div>
+
+    <div id="mathMenu" class="overlay hidden">
+        <div class="menu-card" style="border-color: #00ff00;">
+            <h2 style="color:#00ff00">MATH CHECK</h2>
+            <div id="mathQuestion"></div>
+            <div id="mathDisplay"></div>
+            <p style="color:#666">Typ antwoord + ENTER</p>
+        </div>
+    </div>
+
+    <div id="settingsMenu" class="overlay hidden">
+        <div class="menu-card">
+            <h2>SETTINGS</h2>
+            <p>DIFFICULTY</p>
+            <select id="diffSelect" style="width:100%; padding:10px; background:#222; color:white;">
+                <option value="0.008|0.5">EASY (+0.5 Lvl)</option>
+                <option value="0.015|1" selected="">NORMAL (+1 Lvl)</option>
+                <option value="0.025|3">HARD (+3 Lvl)</option>
+            </select>
+            <hr border="1" color="#333">
+            <p>KEYBINDS (Klik om te wijzigen)</p>
+            <div id="keybindsList"></div>
+            <button onclick="showMenu('mainMenu')" style="margin-top:10px;">SAVE &amp; BACK</button>
+        </div>
+    </div>
+
+    <div id="modsMenu" class="overlay hidden">
+        <div class="menu-card">
+            <h1>MODS</h1>
+            <input type="password" id="modCode" placeholder="CODE" style="width:80%; padding:10px; background:#000; color:white; border:1px solid #333; margin-bottom:10px;">
+            <button onclick="unlockMods()">UNLOCK</button>
+            <div id="modContent" class="hidden">
+                <button onclick="hacks.ghost = !hacks.ghost; this.innerText=hacks.ghost?'GODMODE: ON':'GODMODE: OFF'">GODMODE: OFF</button>
+            </div>
+            <button onclick="showMenu('mainMenu')">BACK</button>
+        </div>
+    </div>
+
+    <div id="victoryScreen" class="overlay hidden">
+        <h1 style="color: #fbff00; font-size: 50px;">VICTORY ROYAL</h1>
+        <p id="victorySub" style="font-size: 20px;"></p>
+        <button onclick="location.reload()" style="width: 200px;">BACK TO MENU</button>
+    </div>
+</div>
+
+<script type="importmap"> { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } } </script>
+
+<script type="module">
+import * as THREE from 'three';
+
+let scene, camera, renderer, player, clock;
+let enemies = [], bullets = [], enemyBullets = [], mapObjects = [], buildBlocks = [];
+let gameActive = false, playerHP = 500, botFireChance = 0.015, levelGain = 1;
+let currentAnswer = 0, currentInput = "", lastMathTime = Date.now();
+
+let playerLevel = parseFloat(localStorage.getItem('mattyou_level')) || 1;
+document.getElementById('levelLabel').innerText = playerLevel;
+
+window.config = { forward: 'w', backward: 's', left: 'a', right: 'd', jump: ' ', panic: 'v' };
+let bindingKey = null;
+
+function setupKeybindUI() {
+    const list = document.getElementById('keybindsList');
+    list.innerHTML = "";
+    Object.keys(window.config).forEach(action => {
+        const row = document.createElement('div');
+        row.className = 'key-row';
+        row.innerHTML = `<span>${action.toUpperCase()}</span><button class="key-btn" onclick="startBinding('${action}')" id="btn-${action}">${window.config[action] === ' ' ? 'SPACE' : window.config[action].toUpperCase()}</button>`;
+        list.appendChild(row);
+    });
+}
+window.startBinding = (action) => { bindingKey = action; document.getElementById(`btn-${action}`).innerText = "..."; };
+
+window.hacks = { ghost: false };
+
+function init() {
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x050505);
+    const container = document.getElementById('mattyou-game-frame');
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    container.appendChild(renderer.domElement);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+    
+    player = { obj: new THREE.Object3D(), velY: 0, onGround: true, keys: {} };
+    scene.add(player.obj);
+    player.obj.add(camera);
+    player.obj.position.set(0, 2, 0);
+    clock = new THREE.Clock();
+
+    // Resize-handler voor fullscreen
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    window.addEventListener('keydown', (e) => {
+        const key = e.key.toLowerCase();
+        if(key === " " && gameActive) e.preventDefault();
+        
+        if(bindingKey) {
+            window.config[bindingKey] = key;
+            bindingKey = null;
+            setupKeybindUI();
+            return;
+        }
+
+        if(document.getElementById('mathMenu').classList.contains('hidden')) {
+            player.keys[key] = true;
+            if(key === window.config.panic && gameActive) triggerMath();
+        } else {
+            if(e.key >= '0' && e.key <= '9') { currentInput += e.key; document.getElementById('mathDisplay').innerText = currentInput; }
+            if(e.key === 'Backspace') { currentInput = currentInput.slice(0, -1); document.getElementById('mathDisplay').innerText = currentInput; }
+            if(e.key === 'Enter') checkMath();
+        }
+    });
+    window.onkeyup = (e) => player.keys[e.key.toLowerCase()] = false;
+    
+    container.addEventListener('mousedown', (e) => {
+        if(gameActive && document.getElementById('mathMenu').classList.contains('hidden')) {
+            renderer.domElement.requestPointerLock();
+            if(e.button === 0) fireBullet();
+            if(e.button === 2) placeBlock();
+        }
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (document.pointerLockElement === renderer.domElement && gameActive) {
+            player.obj.rotation.y -= e.movementX * 0.002;
+            camera.rotation.x -= e.movementY * 0.002;
+            camera.rotation.x = Math.max(-1.5, Math.min(1.5, camera.rotation.x));
+        }
+    });
+
+    generateArena();
+    setupKeybindUI();
+    animate();
+}
+
+function generateArena() {
+    const ground = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshLambertMaterial({color: 0x111111}));
+    ground.rotation.x = -Math.PI/2; ground.name = "ground"; scene.add(ground);
+    const mat = new THREE.MeshLambertMaterial({color: 0x333333});
+    for(let i=0; i<100; i++) {
+        const h = Math.random() * 10 + 2;
+        const mesh = new THREE.Mesh(new THREE.BoxGeometry(Math.random()*10+2, h, Math.random()*10+2), mat);
+        mesh.position.set(Math.random()*400-200, h/2, Math.random()*400-200);
+        scene.add(mesh); mapObjects.push(mesh);
+    }
+}
+
+function triggerMath() {
+    gameActive = false; document.exitPointerLock();
+    currentInput = ""; document.getElementById('mathDisplay').innerText = "";
+    const a = Math.floor(Math.random() * 12) + 1; const b = Math.floor(Math.random() * 12) + 1;
+    currentAnswer = a * b; document.getElementById('mathQuestion').innerText = `${a} x ${b} = ?`;
+    showMenu('mathMenu');
+}
+
+function checkMath() {
+    if(parseInt(currentInput) === currentAnswer) {
+        document.getElementById('mathMenu').classList.add('hidden');
+        gameActive = true; lastMathTime = Date.now();
+        renderer.domElement.requestPointerLock();
+    }
+}
+
+function fireBullet() {
+    const b = new THREE.Mesh(new THREE.SphereGeometry(0.15), new THREE.MeshBasicMaterial({color: 0x00ffff}));
+    const dir = new THREE.Vector3(); camera.getWorldDirection(dir);
+    b.position.copy(player.obj.position);
+    b.userData = { vel: dir.multiplyScalar(2.8), life: 150 };
+    scene.add(b); bullets.push(b);
+}
+
+function placeBlock() {
+    const ray = new THREE.Raycaster(); ray.setFromCamera(new THREE.Vector2(0,0), camera);
+    const hits = ray.intersectObjects([scene.getObjectByName('ground'), ...mapObjects, ...buildBlocks]);
+    if(hits.length > 0) {
+        const p = hits[0].point.add(hits[0].face.normal.multiplyScalar(0.75));
+        const b = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.5, 1.5), new THREE.MeshLambertMaterial({color: 0x555555}));
+        b.position.set(Math.round(p.x), Math.round(p.y), Math.round(p.z));
+        scene.add(b); buildBlocks.push(b);
+    }
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    const delta = clock.getDelta();
+    if(!gameActive) { renderer?.render(scene, camera); return; }
+
+    if(Date.now() - lastMathTime > 30000) triggerMath();
+
+    if(player.keys[window.config.forward]) player.obj.translateZ(-14 * delta);
+    if(player.keys[window.config.backward]) player.obj.translateZ(14 * delta);
+    if(player.keys[window.config.left]) player.obj.translateX(-14 * delta);
+    if(player.keys[window.config.right]) player.obj.translateX(14 * delta);
+    
+    player.velY -= 22 * delta;
+    player.obj.position.y += player.velY * delta;
+    if(player.obj.position.y < 1.6) { player.obj.position.y = 1.6; player.velY = 0; player.onGround = true; }
+    if(player.keys[window.config.jump] && player.onGround) { player.velY = 8.5; player.onGround = false; }
+
+    bullets.forEach((b, i) => {
+        b.position.add(b.userData.vel);
+        enemies.forEach((bot, bi) => {
+            if(b.position.distanceTo(bot.position) < 1.8) {
+                bot.userData.hp -= 35; scene.remove(b); bullets.splice(i,1);
+                if(bot.userData.hp <= 0) { 
+                    scene.remove(bot); enemies.splice(bi, 1); 
+                    document.getElementById('botCount').innerText = enemies.length;
+                    if(enemies.length === 0) winGame();
+                }
+            }
+        });
+        if(b.userData.life-- <= 0) { scene.remove(b); bullets.splice(i,1); }
+    });
+
+    enemies.forEach(bot => {
+        bot.lookAt(player.obj.position.x, bot.position.y, player.obj.position.z);
+        bot.translateZ(3.5 * delta);
+        const now = Date.now();
+        if(Math.random() < botFireChance && now - bot.userData.lastFired > 900) {
+            const eb = new THREE.Mesh(new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({color: 0xff0000}));
+            eb.position.copy(bot.position);
+            const dir = new THREE.Vector3().subVectors(player.obj.position, bot.position).normalize();
+            eb.userData = { vel: dir.multiplyScalar(1.2), life: 120 };
+            
+            const ebRay = new THREE.Raycaster(eb.position, dir, 0, 1);
+            if(ebRay.intersectObjects([...mapObjects, ...buildBlocks]).length === 0) {
+                scene.add(eb); enemyBullets.push(eb);
+            }
+            bot.userData.lastFired = now;
+        }
+    });
+
+    enemyBullets.forEach((eb, i) => {
+        eb.position.add(eb.userData.vel);
+        const wallCheck = new THREE.Raycaster(eb.position, eb.userData.vel.clone().normalize(), 0, 1);
+        if(wallCheck.intersectObjects([...mapObjects, ...buildBlocks]).length > 0) {
+            scene.remove(eb); enemyBullets.splice(i,1); return;
+        }
+        if(eb.position.distanceTo(player.obj.position) < 1.2 && !window.hacks.ghost) {
+            playerHP -= 5;
+            document.getElementById('hpLabel').innerText = Math.max(0, playerHP);
+            scene.remove(eb); enemyBullets.splice(i,1);
+            if(playerHP <= 0) location.reload();
+        }
+    });
+
+    renderer.render(scene, camera);
+}
+
+function winGame() {
+    gameActive = false; document.exitPointerLock();
+    playerLevel += levelGain;
+    localStorage.setItem('mattyou_level', playerLevel);
+    document.getElementById('victorySub').innerText = `WIN! JE BENT NU LEVEL ${playerLevel}`;
+    showMenu('victoryScreen');
+}
+
+window.startGame = () => {
+    const diffData = document.getElementById('diffSelect').value.split('|');
+    botFireChance = parseFloat(diffData[0]);
+    levelGain = parseFloat(diffData[1]);
+    document.getElementById('mainMenu').classList.add('hidden');
+    document.getElementById('hud').style.display = 'block';
+    document.getElementById('crosshair').style.display = 'block';
+    if(!scene) init();
+    for(let i=0; i<18; i++) {
+        const bot = new THREE.Mesh(new THREE.BoxGeometry(1.5, 2, 1.5), new THREE.MeshBasicMaterial({color: 0xff0000}));
+        bot.position.set(Math.random()*360-180, 1, Math.random()*360-180);
+        bot.userData = { hp: 100, lastFired: 0 };
+        scene.add(bot); enemies.push(bot);
+    }
+    document.getElementById('botCount').innerText = enemies.length;
+    gameActive = true;
+    lastMathTime = Date.now();
+};
+
+window.showMenu = (id) => { 
+    document.querySelectorAll('.overlay').forEach(e=>e.classList.add('hidden')); 
+    document.getElementById(id).classList.remove('hidden'); 
+};
+
+window.unlockMods = () => { 
+    if(document.getElementById('modCode').value === '7123') document.getElementById('modContent').classList.remove('hidden'); 
+};
+
+init();
+</script>
