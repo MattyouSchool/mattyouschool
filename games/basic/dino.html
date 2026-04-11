@@ -3,25 +3,62 @@
 <head>
     <title>DYLOKI | Cyber Run</title>
     <link rel="stylesheet" href="/style.css">
-    <style>#gameCanvas { background: #000; border-bottom: 2px solid var(--cyan); display: block; margin: 50px auto; }</style>
+    <style>
+        #gameCanvas { background: #000; border-bottom: 2px solid var(--cyan); display: block; margin: 40px auto; }
+    </style>
 </head>
 <body style="text-align: center; background: #050505; color: white;">
-    <h1 style="font-family: 'Syncopate'; padding-top: 50px;">CYBER RUN</h1>
-    <canvas id="gameCanvas" width="600" height="200"></canvas>
-    <p style="color: var(--text-muted);">Spatie om te springen</p>
-    <a href="/games/" style="color: var(--cyan); text-decoration: none;">← Terug naar Games</a>
+    <h1 style="font-family: 'Syncopate'; padding-top: 30px;">CYBER RUN</h1>
+    <canvas id="gameCanvas" width="800" height="200"></canvas>
+    <p id="msg">SPATIE OM TE SPRINGEN</p>
+    <a href="/games/" style="color: var(--cyan); text-decoration: none;">← TERUG</a>
+
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        let dino = { x: 50, y: 150, w: 40, h: 40, dy: 0, jump: -12, gravity: 0.6, grounded: false };
+        let gameActive = true;
+        let score = 0;
+        let dino = { x: 50, y: 160, w: 40, h: 40, dy: 0, jump: -12, gravity: 0.7, grounded: false };
+        let obstacles = [];
+
+        function spawnObstacle() {
+            if (!gameActive) return;
+            obstacles.push({ x: canvas.width, y: 160, w: 20, h: 40 });
+            setTimeout(spawnObstacle, 1000 + Math.random() * 2000);
+        }
+
         function update() {
+            if (!gameActive) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            dino.dy += dino.gravity; dino.y += dino.dy;
-            if (dino.y > 150) { dino.y = 150; dino.dy = 0; dino.grounded = true; }
-            ctx.fillStyle = "#00e5ff"; ctx.fillRect(dino.x, dino.y, dino.w, dino.h);
+
+            dino.dy += dino.gravity;
+            dino.y += dino.dy;
+            if (dino.y > 160) { dino.y = 160; dino.dy = 0; dino.grounded = true; }
+
+            ctx.fillStyle = "#00e5ff";
+            ctx.fillRect(dino.x, dino.y, dino.w, dino.h);
+
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                obstacles[i].x -= 6;
+                ctx.fillStyle = "white";
+                ctx.fillRect(obstacles[i].x, obstacles[i].y, obstacles[i].w, obstacles[i].h);
+
+                if (dino.x < obstacles[i].x + obstacles[i].w && 
+                    dino.x + dino.w > obstacles[i].x && 
+                    dino.y < obstacles[i].y + obstacles[i].h && 
+                    dino.y + dino.h > obstacles[i].y) {
+                    gameActive = false;
+                    document.getElementById('msg').innerText = "GAME OVER! DRUK F5";
+                }
+            }
+            score++;
+            ctx.fillStyle = "white";
+            ctx.fillText("XP SCORE: " + Math.floor(score/10), 700, 30);
             requestAnimationFrame(update);
         }
+
         window.addEventListener('keydown', e => { if (e.code === 'Space' && dino.grounded) { dino.dy = dino.jump; dino.grounded = false; } });
+        spawnObstacle();
         update();
     </script>
 </body>
