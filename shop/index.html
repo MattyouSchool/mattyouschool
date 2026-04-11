@@ -16,41 +16,25 @@
             <li><a href="https://www.youtube.com/@matyou333" target="_blank">YouTube</a></li>
             <li><a href="/shop/" class="highlight-link">Shop</a></li>
         </ul>
-        <div class="nav-spacer"></div>
     </nav>
 
-    <header class="container" style="text-align: center; padding-top: 40px;">
-        <h1 style="font-family: 'Syncopate'; font-size: 2rem; letter-spacing: 4px;">UPGRADE_<span>ZONE</span></h1>
-        <p style="color: var(--text-muted); margin-top: 10px;">Geef je XP uit aan exclusieve extra's.</p>
-    </header>
-
-    <main class="container">
-        <div style="text-align: center; margin-bottom: 40px;">
-            <div id="shop-xp-display" class="btn-sub" style="display: inline-block; padding: 10px 30px; border-color: var(--cyan); color: var(--cyan); font-weight: 800;">
-                JE SALDO: LADEN...
-            </div>
+    <main class="container" style="text-align: center; padding-top: 50px;">
+        <h1 style="font-family: 'Syncopate';">UPGRADE_<span>ZONE</span></h1>
+        
+        <div id="shop-xp-display" class="btn-sub" style="margin: 30px auto; display: inline-block; padding: 10px 30px; border-color: var(--cyan); color: var(--cyan); font-weight: 800;">
+            SALDO: LADEN...
         </div>
 
         <div class="grid">
-            <div class="mission-card interactive-border" style="text-align: center;">
-                <div style="font-size: 2.5rem; margin-bottom: 15px;">🏅</div>
-                <h3 style="font-size: 0.8rem; letter-spacing: 2px;">BRONZE BADGE</h3>
-                <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 20px;">Een icoon naast je naam.</p>
+            <div class="mission-card interactive-border">
+                <div style="font-size: 2.5rem;">🏅</div>
+                <h3>BRONZE BADGE</h3>
                 <button onclick="buyItem('Bronze Badge', 50)" class="btn-main" style="width: 100%;">50 XP</button>
             </div>
-
-            <div class="mission-card interactive-border" style="text-align: center;">
-                <div style="font-size: 2.5rem; margin-bottom: 15px;">🎨</div>
-                <h3 style="font-size: 0.8rem; letter-spacing: 2px;">CYAN GLOW</h3>
-                <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 20px;">Krijg een glimmende naam.</p>
+            <div class="mission-card interactive-border">
+                <div style="font-size: 2.5rem;">🎨</div>
+                <h3>CYAN GLOW</h3>
                 <button onclick="buyItem('Cyan Glow', 150)" class="btn-main" style="width: 100%;">150 XP</button>
-            </div>
-
-            <div class="mission-card interactive-border" style="text-align: center;">
-                <div style="font-size: 2.5rem; margin-bottom: 15px;">🔑</div>
-                <h3 style="font-size: 0.8rem; letter-spacing: 2px;">BETA TESTER</h3>
-                <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 20px;">Toegang tot nieuwe games.</p>
-                <button onclick="buyItem('Beta Access', 300)" class="btn-main" style="width: 100%;">300 XP</button>
             </div>
         </div>
     </main>
@@ -60,37 +44,29 @@
         <p style="font-size: 0.7rem; color: var(--text-muted);">&copy; All rights reserved</p>
     </footer>
 
-    <script src="/xp-system.js"></script>
-
     <script>
-        // We gebruiken de naam 'dyloki_xp' omdat de meeste XP scripts die naam gebruiken
-        // Mocht je dashboard op 0 blijven staan, verander 'dyloki_xp' dan naar 'xp'
-        const XP_KEY = 'dyloki_xp'; 
+        // MOET EXACT HETZELFDE ZIJN ALS IN XP-SYSTEM.JS
+        const XP_STORAGE_KEY = 'user_total_xp';
 
-        function updateShopDisplay() {
-            const currentXP = parseInt(localStorage.getItem(XP_KEY)) || 0;
-            document.getElementById('shop-xp-display').innerText = `JE SALDO: ${currentXP} XP`;
+        function updateShop() {
+            const xp = localStorage.getItem(XP_STORAGE_KEY) || 0;
+            document.getElementById('shop-xp-display').innerText = `SALDO: ${xp} XP`;
         }
 
         function buyItem(name, price) {
-            let currentXP = parseInt(localStorage.getItem(XP_KEY)) || 0;
-            
-            if (currentXP >= price) {
-                currentXP -= price;
-                localStorage.setItem(XP_KEY, currentXP);
-                alert(`Gefeliciteerd! Je hebt ${name} gekocht.`);
-                updateShopDisplay();
-                // Ververs de pagina om overal de nieuwe stand te laten zien
-                window.location.reload();
+            let xp = parseInt(localStorage.getItem(XP_STORAGE_KEY)) || 0;
+            if (xp >= price) {
+                xp -= price;
+                localStorage.setItem(XP_STORAGE_KEY, xp);
+                alert(`Gekocht: ${name}!`);
+                updateShop();
             } else {
-                alert("Niet genoeg XP! Blijf nog even online om meer te verdienen.");
+                alert("Niet genoeg XP!");
             }
         }
-        
-        // Start de weergave
-        window.onload = updateShopDisplay;
-        // Check elke seconde of er XP bij is gekomen van het hoofdsysteem
-        setInterval(updateShopDisplay, 1000);
+
+        window.onload = updateShop;
+        setInterval(updateShop, 1000); // Check elke seconde voor updates
     </script>
 </body>
 </html>
