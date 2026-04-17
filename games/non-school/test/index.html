@@ -2,65 +2,64 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>Rocket JS - Fixed Version</title>
+    <title>Rocket JS - Bots & Jumping</title>
     <style>
-        body { margin: 0; overflow: hidden; background: #111; font-family: sans-serif; }
+        body { margin: 0; overflow: hidden; background: #000; font-family: 'Arial Black', sans-serif; }
         #menu {
-            position: absolute; inset: 0; background: #000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: white; z-index: 100;
+            position: absolute; inset: 0; background: radial-gradient(circle, #222, #000);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; z-index: 100;
         }
         #ui {
             position: absolute; top: 20px; width: 100%; text-align: center;
             color: white; display: none; pointer-events: none; z-index: 10;
         }
-        #scoreboard { font-size: 32px; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 10px; }
-        button { padding: 15px 30px; font-size: 20px; cursor: pointer; background: #00bcff; border: none; color: white; border-radius: 5px; }
+        #scoreboard { font-size: 32px; background: rgba(0,0,0,0.7); padding: 10px 30px; border-radius: 50px; border: 3px solid #fff; }
+        button { padding: 20px 50px; font-size: 24px; cursor: pointer; background: #ffaa00; border: none; color: white; border-radius: 10px; font-weight: bold; }
+        button:hover { background: #fff; color: #000; }
     </style>
 </head>
 <body>
 
 <div id="menu">
-    <h1>ROCKET JS 3D</h1>
-    <p>Besturing: WASD / Pijltjes</p>
+    <h1 style="color: #00bcff; font-size: 50px;">ROCKET JS BOTS</h1>
+    <p>WASD: Rijden | SPATIE: Springen | SHIFT: Dash (Schieten)</p>
     <button id="startBtn">START MATCH</button>
 </div>
 
 <div id="ui">
-    <div id="scoreboard">BLAUW <span id="s1">0</span> - <span id="s2">0</span> ORANJE</div>
+    <div id="scoreboard"><span id="s1" style="color:#00bcff">0</span> - <span id="s2" style="color:#ffaa00">0</span></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
 
 <script>
-// We gebruiken normale Javascript (geen modules) om laadfouten te voorkomen
-let scene, camera, renderer, world, ball, ballBody, car, carBody;
+let scene, camera, renderer, world, ball, ballBody, playerCar, playerBody;
+let bots = [];
 let score = [0, 0];
 const keys = {};
 
-document.getElementById('startBtn').addEventListener('click', function() {
+document.getElementById('startBtn').onclick = () => {
     document.getElementById('menu').style.display = 'none';
     document.getElementById('ui').style.display = 'block';
     init();
-});
+};
 
 function init() {
-    // 1. SCENE
+    // 1. Scene & Physics
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x050505);
+    scene.background = new THREE.Color(0x0a0a0a);
+    world = new CANNON.World();
+    world.gravity.set(0, -15, 0); // Iets sterkere zwaartekracht voor snellere actie
+
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // 2. PHYSICS
-    world = new CANNON.World();
-    world.gravity.set(0, -9.82, 0);
-
-    // 3. GROND
-    const groundGeo = new THREE.PlaneGeometry(60, 100);
-    const groundMat = new THREE.MeshPhongMaterial({ color: 0x228B22 });
+    // 2. Grond & Veldbegrenzing
+    const groundGeo = new THREE.PlaneGeometry(60, 110);
+    const groundMat = new THREE.MeshPhongMaterial({ color: 0x113311 });
     const ground = new THREE.Mesh(groundGeo, groundMat);
     ground.rotation.x = -Math.PI / 2;
     scene.add(ground);
@@ -70,76 +69,149 @@ function init() {
     groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0), -Math.PI/2);
     world.addBody(groundBody);
 
-    // 4. BAL
-    const ballGeo = new THREE.SphereGeometry(1.5, 16, 16);
+    // 3. Bal
+    const ballGeo = new THREE.SphereGeometry(1.8, 24, 24);
     const ballMat = new THREE.MeshPhongMaterial({ color: 0xffffff });
     ball = new THREE.Mesh(ballGeo, ballMat);
     scene.add(ball);
 
-    ballBody = new CANNON.Body({ mass: 1, shape: new CANNON.Sphere(1.5) });
+    ballBody = new CANNON.Body({ mass: 0.8, shape: new CANNON.Sphere(1.8) });
     ballBody.position.set(0, 5, 0);
+    ballBody.linearDamping = 0.2;
     world.addBody(ballBody);
 
-    // 5. AUTO
-    const carGeo = new THREE.BoxGeometry(2, 1, 4);
-    const carMat = new THREE.MeshPhongMaterial({ color: 0x00bcff });
-    car = new THREE.Mesh(carGeo, carMat);
-    scene.add(car);
+    // 4. Speler Auto
+    playerBody = createCarBody(0, 2, 40);
+    playerCar = createCarMesh(0x00bcff);
+    world.addBody(playerBody);
+    scene.add(playerCar);
 
-    carBody = new CANNON.Body({ mass: 5, shape: new CANNON.Box(new CANNON.Vec3(1, 0.5, 2)) });
-    carBody.position.set(0, 1, 30);
-    world.addBody(carBody);
+    // 5. Bots toevoegen (2 bots)
+    createBot(-10, -40);
+    createBot(10, -40);
 
-    // 6. LICHT
-    const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(10, 20, 10);
-    scene.add(light);
-    scene.add(new THREE.AmbientLight(0x404040));
+    // Licht
+    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambient);
+    const sun = new THREE.DirectionalLight(0xffffff, 1);
+    sun.position.set(20, 50, 10);
+    scene.add(sun);
 
     animate();
 }
 
-window.addEventListener('keydown', e => keys[e.code] = true);
-window.addEventListener('keyup', e => keys[e.code] = false);
+function createCarBody(x, y, z) {
+    const body = new CANNON.Body({ mass: 5 });
+    body.addShape(new CANNON.Box(new CANNON.Vec3(1.2, 0.6, 2)));
+    body.position.set(x, y, z);
+    body.angularDamping = 0.9; // Voorkomt dat de auto oneindig rondtolt
+    return body;
+}
+
+function createCarMesh(color) {
+    const carGeo = new THREE.BoxGeometry(2.4, 1.2, 4);
+    const carMat = new THREE.MeshPhongMaterial({ color: color });
+    return new THREE.Mesh(carGeo, carMat);
+}
+
+function createBot(x, z) {
+    const bBody = createCarBody(x, 2, z);
+    const bMesh = createCarMesh(0xffaa00);
+    world.addBody(bBody);
+    scene.add(bMesh);
+    bots.push({ body: bBody, mesh: bMesh });
+}
+
+window.onkeydown = (e) => keys[e.code] = true;
+window.onkeyup = (e) => keys[e.code] = false;
+
+function updatePlayer() {
+    const force = 40;
+    const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(playerCar.quaternion);
+
+    if (keys['KeyW'] || keys['ArrowUp']) {
+        playerBody.velocity.x += forward.x * force * 0.016;
+        playerBody.velocity.z += forward.z * force * 0.016;
+    }
+    if (keys['KeyS'] || keys['ArrowDown']) {
+        playerBody.velocity.x -= forward.x * force * 0.016;
+        playerBody.velocity.z -= forward.z * force * 0.016;
+    }
+    if (keys['KeyA'] || keys['ArrowLeft']) playerBody.angularVelocity.y = 2.5;
+    else if (keys['KeyD'] || keys['ArrowRight']) playerBody.angularVelocity.y = -2.5;
+    else playerBody.angularVelocity.y = 0;
+
+    // Springen (Check of de auto dicht bij de grond is)
+    if (keys['Space'] && Math.abs(playerBody.position.y) < 1.5) {
+        playerBody.velocity.y = 8;
+        keys['Space'] = false; // Voorkom "vliegen" door ingedrukt te houden
+    }
+
+    // Dash / Schieten (Shift)
+    if (keys['ShiftLeft'] || keys['ShiftRight']) {
+        playerBody.velocity.x += forward.x * 2;
+        playerBody.velocity.z += forward.z * 2;
+    }
+}
+
+function updateBots() {
+    bots.forEach(bot => {
+        // Simpele AI: Beweeg richting de bal
+        const dx = ballBody.position.x - bot.body.position.x;
+        const dz = ballBody.position.z - bot.body.position.z;
+        
+        bot.body.velocity.x += dx * 0.02;
+        bot.body.velocity.z += dz * 0.02;
+        
+        // Laat de bot naar de bal kijken
+        bot.mesh.lookAt(ball.position);
+        bot.body.quaternion.copy(bot.mesh.quaternion);
+    });
+}
 
 function animate() {
     requestAnimationFrame(animate);
     world.step(1/60);
 
-    // Kopieer physics naar beelden
+    // Update Player Visuals
+    playerCar.position.copy(playerBody.position);
+    playerCar.quaternion.copy(playerBody.quaternion);
+    
+    // Update Ball Visuals
     ball.position.copy(ballBody.position);
     ball.quaternion.copy(ballBody.quaternion);
-    car.position.copy(carBody.position);
-    car.quaternion.copy(carBody.quaternion);
 
-    // Besturing
-    if (keys['KeyW'] || keys['ArrowUp']) {
-        const vector = new THREE.Vector3(0, 0, -1).applyQuaternion(car.quaternion);
-        carBody.velocity.x += vector.x * 0.5;
-        carBody.velocity.z += vector.z * 0.5;
-    }
-    if (keys['KeyA'] || keys['ArrowLeft']) carBody.angularVelocity.y = 2;
-    else if (keys['KeyD'] || keys['ArrowRight']) carBody.angularVelocity.y = -2;
-    else carBody.angularVelocity.y = 0;
+    // Update Bots Visuals
+    bots.forEach(bot => {
+        bot.mesh.position.copy(bot.body.position);
+        bot.mesh.quaternion.copy(bot.body.quaternion);
+    });
 
-    // Camera
-    camera.position.set(car.position.x, car.position.y + 6, car.position.z + 15);
-    camera.lookAt(car.position);
+    updatePlayer();
+    updateBots();
+
+    // Camera volgt speler
+    const camPos = new THREE.Vector3(0, 7, 15).applyQuaternion(playerCar.quaternion);
+    camera.position.lerp(new THREE.Vector3().copy(playerCar.position).add(camPos), 0.1);
+    camera.lookAt(playerCar.position);
 
     // Goal Check
-    if (ballBody.position.z > 50) { score[1]++; reset(); }
-    if (ballBody.position.z < -50) { score[0]++; reset(); }
+    if (ballBody.position.z > 55) goal(1);  // Oranje scoort
+    if (ballBody.position.z < -55) goal(0); // Blauw scoort
 
     renderer.render(scene, camera);
 }
 
-function reset() {
+function goal(team) {
+    score[team]++;
     document.getElementById('s1').innerText = score[0];
     document.getElementById('s2').innerText = score[1];
-    ballBody.position.set(0, 5, 0);
+    
+    // Reset posities
+    ballBody.position.set(0, 10, 0);
     ballBody.velocity.set(0, 0, 0);
-    carBody.position.set(0, 1, 30);
-    carBody.velocity.set(0, 0, 0);
+    playerBody.position.set(0, 2, 40);
+    playerBody.velocity.set(0, 0, 0);
 }
 </script>
 </body>
