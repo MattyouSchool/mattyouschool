@@ -2,26 +2,30 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Battle Arena</title>
+    <title>JS Rocket League 3D</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="crosshair"></div>
-    <div id="ui">
-        <h2>BOT ARENA</h2>
-        <p>Kills: <span id="score">0</span></p>
+    <div id="menu">
+        <h1>ROCKET JS</h1>
+        <label>Tijd (min): <input type="number" id="gameTime" value="5" min="1"></label><br>
+        <label>Bots per team: <input type="number" id="botCount" value="1" min="0" max="3"></label><br>
+        <button id="startBtn">START GAME</button>
+    </div>
+
+    <div id="ui" style="display:none;">
+        <div id="scoreBoard">BLAUW: 0 - ORANJE: 0</div>
+        <div id="timer">05:00</div>
     </div>
 
     <script type="importmap">
         {
             "imports": {
                 "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+                "cannon": "https://unpkg.com/cannon-es@0.20.0/dist/cannon-es.js"
             }
         }
     </script>
-
     <script type="module" src="game.js"></script>
 </body>
 </html>
