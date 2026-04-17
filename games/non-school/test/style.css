@@ -1,29 +1,13 @@
-body { 
-    margin: 0; 
-    overflow: hidden; 
-    background-color: #000;
+body { margin: 0; overflow: hidden; background: #111; font-family: sans-serif; }
+#menu {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.9); color: white; padding: 40px; border-radius: 20px;
+    text-align: center; border: 3px solid #00bcff;
 }
-
+input { margin: 10px; padding: 5px; width: 50px; }
+button { padding: 10px 20px; cursor: pointer; background: #00bcff; border: none; font-weight: bold; }
 #ui {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    color: #00ff00; /* Groene kleur voor een 'hacker' of 'game' vibe */
-    background: rgba(0, 0, 0, 0.8);
-    padding: 15px;
-    border: 2px solid #333;
-    font-family: 'Courier New', Courier, monospace;
-    pointer-events: none;
+    position: absolute; top: 10px; width: 100%; text-align: center;
+    color: white; font-size: 24px; font-weight: bold; pointer-events: none;
 }
-
-#crosshair {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 15px;
-    height: 15px;
-    border: 2px solid #fff;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-}
+#scoreBoard { background: rgba(0,0,0,0.5); display: inline-block; padding: 10px 20px; border-radius: 10px; }
