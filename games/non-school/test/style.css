@@ -1,0 +1,29 @@
+body { 
+    margin: 0; 
+    overflow: hidden; 
+    background-color: #000;
+}
+
+#ui {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: #00ff00; /* Groene kleur voor een 'hacker' of 'game' vibe */
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    border: 2px solid #333;
+    font-family: 'Courier New', Courier, monospace;
+    pointer-events: none;
+}
+
+#crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 15px;
+    height: 15px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
