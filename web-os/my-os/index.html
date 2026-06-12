@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyOS Productivity Pro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="desktop-body">
+
+    <div class="desktop" id="desktop">
+        <div class="icon" ondblclick="openWindow('notepad')">
+            <div class="icon-picture">📝</div>
+            <div class="icon-label">Kladblok Pro</div>
+        </div>
+        <div class="icon" ondblclick="openWindow('calculator')">
+            <div class="icon-picture">🧮</div>
+            <div class="icon-label">Rekenmachine</div>
+        </div>
+        <div class="icon" ondblclick="openWindow('files')">
+            <div class="icon-picture">📁</div>
+            <div class="icon-label">Mijn Bestanden</div>
+        </div>
+        <div class="icon" ondblclick="openWindow('system')">
+            <div class="icon-picture">💻</div>
+            <div class="icon-label">Systeem Status</div>
+        </div>
+    </div>
+
+    <div class="window" id="window-notepad" style="top: 60px; left: 80px; width: 550px; height: 400px;">
+        <div class="window-header" onmousedown="startDrag(event, 'window-notepad')">
+            <div class="window-title">📝 Kladblok Pro</div>
+            <button class="close-btn" onclick="closeWindow('notepad')"></button>
+        </div>
+        <div class="notepad-toolbar">
+            <button onclick="changeTextFormat('uppercase')">HOOFDLETTERS</button>
+            <button onclick="changeTextFormat('lowercase')">kleine letters</button>
+            <button onclick="clearNotepad()">Wissen</button>
+            <span id="notepad-counter">Woorden: 0</span>
+        </div>
+        <div class="window-content" style="padding: 0;">
+            <textarea id="notepad-text" oninput="updateWordCount()" placeholder="Begin met typen... Je tekst wordt live geteld."></textarea>
+        </div>
+    </div>
+
+    <div class="window" id="window-calculator" style="top: 120px; left: 160px; width: 280px; height: 380px;">
+        <div class="window-header" onmousedown="startDrag(event, 'window-calculator')">
+            <div class="window-title">🧮 Rekenmachine</div>
+            <button class="close-btn" onclick="closeWindow('calculator')"></button>
+        </div>
+        <div class="window-content" style="background: #0f172a; padding: 10px;">
+            <input type="text" id="calc-screen" readonly value="0">
+            <div class="calc-grid">
+                <button class="calc-btn style-clear" onclick="clearCalc()">C</button>
+                <button class="calc-btn style-op" onclick="pressCalc('/')">/</button>
+                <button class="calc-btn style-op" onclick="pressCalc('*')">*</button>
+                <button class="calc-btn style-op" onclick="pressCalc('-')">-</button>
+                
+                <button class="calc-btn" onclick="pressCalc('7')">7</button>
+                <button class="calc-btn" onclick="pressCalc('8')">8</button>
+                <button class="calc-btn" onclick="pressCalc('9')">9</button>
+                <button class="calc-btn style-op" onclick="pressCalc('+')">+</button>
+                
+                <button class="calc-btn" onclick="pressCalc('4')">4</button>
+                <button class="calc-btn" onclick="pressCalc('5')">5</button>
+                <button class="calc-btn" onclick="pressCalc('6')">6</button>
+                <button class="calc-btn style-eq" style="grid-row: span 2; height: 100%;" onclick="calculateResult()">=</button>
+                
+                <button class="calc-btn" onclick="pressCalc('1')">1</button>
+                <button class="calc-btn" onclick="pressCalc('2')">2</button>
+                <button class="calc-btn" onclick="pressCalc('3')">3</button>
+                
+                <button class="calc-btn" style="grid-column: span 2;" onclick="pressCalc('0')">0</button>
+                <button class="calc-btn" onclick="pressCalc('.')">.</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="window" id="window-files" style="top: 100px; left: 240px; width: 480px; height: 320px;">
+        <div class="window-header" onmousedown="startDrag(event, 'window-files')">
+            <div class="window-title">📁 Mijn Bestanden</div>
+            <button class="close-btn" onclick="closeWindow('files')"></button>
+        </div>
+        <div class="window-content" style="display: flex; gap: 15px; padding: 10px;">
+            <div style="width: 120px; border-right: 1px solid var(--window-border); padding-right: 10px;">
+                <div style="color: var(--accent); font-weight: bold; margin-bottom: 8px; font-size: 0.85rem;">Snelkoppelingen</div>
+                <div style="font-size: 0.9rem; padding: 4px; cursor: pointer; background: rgba(255,255,255,0.05); border-radius:4px;">🏠 Documenten</div>
+                <div style="font-size: 0.9rem; padding: 4px; color: #94a3b8;">📥 Downloads</div>
+            </div>
+            <div style="flex: 1; display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px;" id="file-viewer">
+                </div>
+        </div>
+    </div>
+
+    <div class="window" id="window-system" style="top: 200px; left: 140px; width: 400px; height: 260px;">
+        <div class="window-header" onmousedown="startDrag(event, 'window-system')">
+            <div class="window-title">💻 Systeem Status</div>
+            <button class="close-btn" onclick="closeWindow('system')"></button>
+        </div>
+        <div class="window-content">
+            <p><strong>OS Type:</strong> MyOS Web Client</p>
+            <p><strong>Versie:</strong> 3.0.0 (Extended Edition)</p>
+            <p><strong>Platform:</strong> <span id="sys-platform">Laden...</span></p>
+            <div style="margin-top: 15px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; border-left: 4px solid var(--accent);">
+                <p style="font-size: 0.85rem; color: #94a3b8;">Toetsenbord bindingen:</p>
+                <p style="font-size: 0.85rem;">[Esc] = Minimaliseer alles | [Win / Cmd] = Startmenu</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="start-menu" id="startMenu">
+        <div class="start-header">👤 Hoofdgebruiker</div>
+        <div class="start-apps-list">
+            <div class="start-app-item" onclick="openWindowFromStart('notepad')">📝 Kladblok Pro</div>
+            <div class="start-app-item" onclick="openWindowFromStart('calculator')">🧮 Rekenmachine</div>
+            <div class="start-app-item" onclick="openWindowFromStart('files')">📁 Mijn Bestanden</div>
+            <div class="start-app-item" onclick="openWindowFromStart('system')">💻 Systeem Status</div>
+            <div class="menu-separator"></div>
+            <div class="start-app-item" onclick="closeAllWindows(); toggleStartMenu();" style="color: #ef4444;">🚪 Uitloggen / Alles sluiten</div>
+        </div>
+    </div>
+
+    <div class="taskbar">
+        <div class="taskbar-left">
+            <button class="start-btn" onclick="toggleStartMenu(event)">❖</button>
+            <div class="active-apps" id="taskbarApps"></div>
+        </div>
+        <div class="clock" id="clock">00:00:00</div>
+    </div>
+
+    <div class="context-menu" id="desktopMenu">
+        <div class="menu-item" onclick="changeWallpaper('dark')">🌌 Deep Space Dark</div>
+        <div class="menu-item" onclick="changeWallpaper('neon')">🔮 Neon Cyberpunk</div>
+        <div class="menu-item" onclick="changeWallpaper('matrix')">📟 Retro Matrix</div>
+        <div class="menu-separator"></div>
+        <div class="menu-item" onclick="closeAllWindows()">❌ Ruim Bureaublad Op</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
