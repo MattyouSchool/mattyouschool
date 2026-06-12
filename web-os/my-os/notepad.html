@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <style>
+        body { background: #1e293b; color: #f8fafc; margin: 0; font-family: sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        .toolbar { background: #0f172a; padding: 8px; display: flex; gap: 10px; align-items: center; border-bottom: 1px solid #334155; }
+        button, select { background: #334155; border: none; color: white; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #38bdf8; color: #0f172a; }
+        textarea { flex: 1; background: transparent; border: none; color: white; padding: 15px; font-size: 16px; outline: none; resize: none; font-family: monospace; }
+        .statusbar { background: #0f172a; padding: 5px 15px; font-size: 12px; color: #94a3b8; display: flex; justify-content: space-between; border-top: 1px solid #334155; }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <button onclick="downloadText()">💾 Opslaan (.txt)</button>
+        <button onclick="clearText()">🗑️ Wissen</button>
+        <select id="fontSize" onchange="changeSize()">
+            <option value="14px">Klein</option>
+            <option value="18px" selected>Normaal</option>
+            <option value="24px">Groot</option>
+        </select>
+        <button onclick="transformText('upper')">ABC</button>
+        <button onclick="transformText('lower')">abc</button>
+    </div>
+    <textarea id="editor" oninput="analyzeText()" placeholder="Begin hier te schrijven..."></textarea>
+    <div class="statusbar">
+        <span id="charCount">Tekens: 0</span>
+        <span id="wordCount">Woorden: 0</span>
+    </div>
+
+    <script>
+        const editor = document.getElementById('editor');
+        function analyzeText() {
+            const text = editor.value;
+            document.getElementById('charCount').innerText = `Tekens: ${text.length}`;
+            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+            document.getElementById('wordCount').innerText = `Woorden: ${words}`;
+        }
+        function changeSize() { editor.style.fontSize = document.getElementById('fontSize').value; }
+        function clearText() { editor.value = ''; analyzeText(); }
+        function transformText(t) { editor.value = (t==='upper') ? editor.value.toUpperCase() : editor.value.toLowerCase(); }
+        
+        // Zorgt dat je de tekst echt kunt downloaden naar je computer!
+        function downloadText() {
+            const blob = new Blob([editor.value], {type: "text/plain;charset=utf-8"});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "myos-document.txt";
+            a.click();
+        }
+    </script>
+</body>
+</html>
