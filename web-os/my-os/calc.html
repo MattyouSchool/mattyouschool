@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <style>
+        body { background: #111827; color: white; margin: 0; font-family: monospace; padding: 15px; height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; }
+        #screen { width: 100%; background: #020617; border: 2px solid #334155; border-radius: 8px; color: #38bdf8; text-align: right; padding: 15px; font-size: 2rem; box-sizing: border-box; margin-bottom: 15px; text-shadow: 0 0 10px rgba(56,189,248,0.5); }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; flex: 1; }
+        button { background: #1e293b; border: 1px solid #334155; color: white; border-radius: 8px; font-size: 1.4rem; cursor: pointer; transition: 0.1s; }
+        button:hover { background: #334155; }
+        .op { background: #b45309; } .op:hover { background: #d97706; }
+        .eq { background: #16a34a; grid-column: span 2; } .eq:hover { background: #22c55e; }
+        .clear { background: #991b1b; } .clear:hover { background: #dc2626; }
+    </style>
+</head>
+<body>
+    <input type="text" id="screen" readonly value="0">
+    <div class="grid">
+        <button class="clear" onclick="clearScreen()">C</button>
+        <button onclick="press('(')">(</button>
+        <button onclick="press(')')">)</button>
+        <button class="op" onclick="press('/')">/</button>
+
+        <button onclick="press('7')">7</button>
+        <button onclick="press('8')">8</button>
+        <button onclick="press('9')">9</button>
+        <button class="op" onclick="press('*')">*</button>
+
+        <button onclick="press('4')">4</button>
+        <button onclick="press('5')">5</button>
+        <button onclick="press('6')">6</button>
+        <button class="op" onclick="press('-')">-</button>
+
+        <button onclick="press('1')">1</button>
+        <button onclick="press('2')">2</button>
+        <button onclick="press('3')">3</button>
+        <button class="op" onclick="press('+')">+</button>
+
+        <button onclick="press('0')">0</button>
+        <button onclick="press('.')">.</button>
+        <button class="eq" onclick="solve()">=</button>
+    </div>
+
+    <script>
+        const s = document.getElementById('screen');
+        function press(v) { if(s.value === '0' && v !== '.') s.value = ''; s.value += v; }
+        function clearScreen() { s.value = '0'; }
+        function solve() { try { s.value = eval(s.value); } catch(e) { s.value = 'Fout'; } }
+    </script>
+</body>
+</html>
